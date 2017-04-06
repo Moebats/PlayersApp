@@ -6,6 +6,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
+    "email-validator": "^1.0.7",
     "firebase": "^3.7.4",
     "lodash": "^4.17.4",
     "react": "16.0.0-alpha.3",
