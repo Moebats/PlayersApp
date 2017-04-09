@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { Text } from 'react-native';
+import { Text, View, TouchableOpacity, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { emailChanged, passwordChanged, loginUser } from '../actions';
+import { emailChanged, passwordChanged, loginUser, signupClicked } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
+
+const splash = require('../images/splash.jpg');
 
 class LoginForm extends Component {
   onEmailChange(text) {
@@ -13,10 +15,14 @@ class LoginForm extends Component {
     this.props.passwordChanged(text);
   }
 
-  onButtonPress() {
+  onLoginPress() {
     const { email, password } = this.props;
 
     this.props.loginUser({ email, password });
+  }
+
+  onSignupPress() {
+    this.props.signupClicked();
   }
 
   renderButton() {
@@ -25,51 +31,81 @@ class LoginForm extends Component {
     }
 
     return (
-      <Button onPress={this.onButtonPress.bind(this)}>
+      <Button onPress={this.onLoginPress.bind(this)}>
         Login
       </Button>
     );
   }
 
   render() {
+    const { signUpStyle, errorTextStyle, container, image } = styles;
+
     return (
-      <Card>
-        <CardSection>
-          <Input
-            label="Email"
-            placeholder="email@gmail.com"
-            onChangeText={this.onEmailChange.bind(this)}
-            value={this.props.email}
-          />
-        </CardSection>
+      <Image style={image} source={splash}>
+        <View style={container}>
+          <Card>
+            <CardSection>
+              <Input
+                label="Email"
+                placeholder="email@gmail.com"
+                onChangeText={this.onEmailChange.bind(this)}
+                value={this.props.email}
+              />
+            </CardSection>
 
-        <CardSection>
-          <Input
-            secureTextEntry
-            label="Password"
-            placeholder="password"
-            onChangeText={this.onPasswordChange.bind(this)}
-            value={this.props.password}
-          />
-        </CardSection>
+            <CardSection>
+              <Input
+                secureTextEntry
+                label="Password"
+                placeholder="password"
+                onChangeText={this.onPasswordChange.bind(this)}
+                value={this.props.password}
+              />
+            </CardSection>
 
-        <Text style={styles.errorTextStyle}>
-          {this.props.error}
-        </Text>
+            <Text style={errorTextStyle}>
+              {this.props.error}
+            </Text>
 
-        <CardSection>
-          {this.renderButton()}
-        </CardSection>
-      </Card>
+            <CardSection>
+              {this.renderButton()}
+            </CardSection>
+          </Card>
+
+          <TouchableOpacity onPress={this.onSignupPress.bind(this)}>
+            <Text style={signUpStyle}>
+              Sign Up
+            </Text>
+          </TouchableOpacity>
+
+        </View>
+      </Image>
     );
   }
 }
 
 const styles = {
+  image: {
+    flex: 1,
+    width: undefined,
+    height: undefined,
+    backgroundColor: 'transparent',
+    resizeMode: 'cover'
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center'
+  },
   errorTextStyle: {
     fontSize: 20,
     alignSelf: 'center',
     color: 'red'
+  },
+  signUpStyle: {
+    color: '#007aff',
+    marginTop: 100,
+    fontWeight: 'bold',
+    alignSelf: 'center'
   }
 };
 
@@ -80,5 +116,5 @@ const mapStateToProps = ({ auth }) => {
 };
 
 export default connect(mapStateToProps, {
-  emailChanged, passwordChanged, loginUser
+  emailChanged, passwordChanged, loginUser, signupClicked
 })(LoginForm);
