@@ -1,11 +1,12 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { ListView } from 'react-native';
+import { ListView, View } from 'react-native';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
 import { playerFetch } from '../actions/SignupActions';
 import PlayerItem from './PlayerItem.js';
+import { Button, Card, CardSection } from './common';
 
 class PlayerList extends Component {
 
@@ -41,12 +42,21 @@ class PlayerList extends Component {
 
   render() {
     return (
-      <ListView
-        style={styles.container}
-        enableEmptySections
-        dataSource={this.dataSource}
-        renderRow={this.renderRow}
-      />
+      <View>
+        <ListView
+          style={styles.container}
+          enableEmptySections
+          dataSource={this.dataSource}
+          renderRow={this.renderRow}
+        />
+        <Card>
+         <CardSection>
+           <Button onPress={this.logout.bind(this)}>
+             Logout
+           </Button>
+         </CardSection>
+       </Card>
+     </View>
     );
   }
 }
