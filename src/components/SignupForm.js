@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Picker } from 'react-native';
+import { Text, View, Picker, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import {
   signupEmailChanged,
@@ -30,6 +30,26 @@ class SignupForm extends Component {
   onSignupPress() {
     const { email, password1, position } = this.props;
     this.props.signupUser({ email, password: password1, position });
+  }
+
+  componentDidMount() {
+    Alert.alert(
+      'Location',
+      'Cricket App requires you to set a home location.',
+      [{ text: 'OK', onPress: () => this.getGeoLocation() }],
+      { cancelable: true }
+    );
+  }
+
+  getGeoLocation() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        var initialPosition = JSON.stringify(position);
+        alert(JSON.stringify(initialPosition));
+      },
+      (error) => alert(JSON.stringify(error)),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+    );
   }
 
   renderButton() {
