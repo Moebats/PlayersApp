@@ -14,3 +14,6 @@ export const SIGNUP_POSITION_CHANGED = 'signup_position_changed';
 export const SIGNUP_USER = 'signup_user';
 export const SIGNUP_USER_FAIL = 'signup_user_fail';
 export const SIGNUP_USER_SUCCESS = 'signup_user_success';
+
+//player Actions
+export const PLAYER_FETCH_SUCCESS = 'player_fetch_success';

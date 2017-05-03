@@ -8,11 +8,13 @@ const RouterComponent = () => {
   return (
     <Router>
       <Scene key="auth">
-        <Scene key="login" component={LoginForm} hideNavBar initial />
+        <Scene key="login" component={LoginForm} hideNavBar />
         <Scene key="signup" component={SignupForm} hideNavBar={false} title='Sign Up' />
-      </Scene>
-      <Scene key="main">
-        <Scene key="list" component={PlayerList} hideNavBar initial />
+        <Scene
+        key="playerList" component={PlayerList}
+        title="Players list"
+        rightTitle="My Profile" initial
+        />
       </Scene>
     </Router>
   );

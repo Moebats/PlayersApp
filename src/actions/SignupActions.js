@@ -8,7 +8,8 @@ import {
   SIGNUP_POSITION_CHANGED,
   SIGNUP_USER,
   SIGNUP_USER_FAIL,
-  SIGNUP_USER_SUCCESS
+  SIGNUP_USER_SUCCESS,
+  PLAYER_FETCH_SUCCESS
 } from './types';
 
 export const signupClicked = () => {
@@ -53,6 +54,18 @@ export const signupUser = ({ email, password, position }) => {
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(user => signupSuccess(dispatch, user))
       .catch((error) => signupFail(dispatch, error));
+
+    firebase.database().ref('/users').push({ email, position });
+  };
+};
+
+export const playerFetch = () => {
+  return (dispatch) => {
+    const playerRef = firebase.database().ref('/users');
+    playerRef
+      .on('value', snapshot => {
+      dispatch({ type: PLAYER_FETCH_SUCCESS, payload: snapshot.val() });
+      });
   };
 };
 
