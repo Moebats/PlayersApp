@@ -8,9 +8,12 @@ import {
   signupPositionChanged,
   signupUser
  } from '../actions';
+
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class SignupForm extends Component {
+
+  //calling action creators
   onEmailChange(text) {
     this.props.signupEmailChanged(text);
   }

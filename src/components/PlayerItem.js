@@ -12,7 +12,7 @@ class PlayerItem extends Component {
         <View>
           <CardSection>
             <Text style={styles.titleStyle}>
-              Player email: {email} {"\n"}
+              Player email: {email} {'\n'}
               Player position: {position}
             </Text>
           </CardSection>

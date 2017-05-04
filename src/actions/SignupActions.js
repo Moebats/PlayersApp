@@ -1,5 +1,6 @@
 import { Actions } from 'react-native-router-flux';
 import firebase from 'firebase';
+//action types
 import {
   SIGNUP_CLICKED,
   SIGNUP_EMAIL_CHANGED,
@@ -12,6 +13,8 @@ import {
   PLAYER_FETCH_SUCCESS
 } from './types';
 
+//action generators
+//routes the user to sign up page
 export const signupClicked = () => {
   return (dispatch) => {
     dispatch({ type: SIGNUP_CLICKED });
@@ -47,16 +50,27 @@ export const signupPositionChanged = (text) => {
   };
 };
 
+//Add other user sign up feild actions below
+
 export const signupUser = ({ email, password, position }) => {
   return (dispatch) => {
     dispatch({ type: SIGNUP_USER });
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
-      .then(user => signupSuccess(dispatch, user))
-      .catch((error) => signupFail(dispatch, error));
+    //After succesful user creation, .set creates a new entry
+    //in the database using authentication uid instead of .push new unique ID
+      .then(function(user){
+         signupSuccess(dispatch, user);
+         const { currentUser } = firebase.auth();
+         const usersRef = firebase.database().ref('/users');
 
-    firebase.database().ref('/users').push({ email, position });
-  };
+         usersRef.child(currentUser.uid).set({
+             email,
+             position
+           });
+      })
+      .catch((error) => signupFail(dispatch, error));
+    };
 };
 
 export const playerFetch = () => {
