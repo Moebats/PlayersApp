@@ -8,6 +8,8 @@ export const LOGIN_USER = 'login_user';
 //SignupActions
 export const SIGNUP_CLICKED = 'signup_clicked';
 export const SIGNUP_EMAIL_CHANGED = 'signup_email_changed';
+export const SIGNUP_NAME_CHANGED = 'signup_name_changed';
+export const SIGNUP_LOCATION_CHANGED = 'signup_location_changed';
 export const SIGNUP_PASSWORD1_CHANGED = 'signup_password1_changed';
 export const SIGNUP_PASSWORD2_CHANGED = 'signup_password2_changed';
 export const SIGNUP_POSITION_CHANGED = 'signup_position_changed';

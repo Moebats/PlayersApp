@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Text, View, Picker } from 'react-native';
 import { connect } from 'react-redux';
+
 import {
   signupEmailChanged,
+  signupNameChanged,
+  signupLocationChanged,
   signupPassword1Changed,
   signupPassword2Changed,
   signupPositionChanged,
@@ -18,6 +21,14 @@ class SignupForm extends Component {
     this.props.signupEmailChanged(text);
   }
 
+  onNameChange(text) {
+    this.props.signupNameChanged(text);
+  }
+
+  onLocationChange(text) {
+    this.props.signupLocationChanged(text);
+  }
+
   onPassword1Change(text) {
     this.props.signupPassword1Changed(text);
   }
@@ -31,8 +42,8 @@ class SignupForm extends Component {
   }
 
   onSignupPress() {
-    const { email, password1, position } = this.props;
-    this.props.signupUser({ email, password: password1, position });
+    const { email, name, location, password1, position } = this.props;
+    this.props.signupUser({ email, name, location, password: password1, position });
   }
 
   renderButton() {
@@ -59,6 +70,24 @@ class SignupForm extends Component {
                 placeholder="email@gmail.com"
                 onChangeText={this.onEmailChange.bind(this)}
                 value={this.props.email}
+              />
+            </CardSection>
+
+            <CardSection>
+              <Input
+                label="Name"
+                placeholder="Brian Lara"
+                onChangeText={this.onNameChange.bind(this)}
+                value={this.props.name}
+              />
+            </CardSection>
+
+            <CardSection>
+              <Input
+                label="Location"
+                placeholder="Toronto"
+                onChangeText={this.onLocationChange.bind(this)}
+                value={this.props.location}
               />
             </CardSection>
 
@@ -129,14 +158,16 @@ const styles = {
 };
 
 const mapStateToProps = ({ signup }) => {
-  const { email, password1, password2, position, error, loading } = signup;
+  const { email, name, location, password1, password2, position, error, loading } = signup;
 
-  return { email, password1, password2, position, error, loading };
+  return { email, name, location, password1, password2, position, error, loading };
 };
 
 export default connect(mapStateToProps,
   {
     signupEmailChanged,
+    signupNameChanged,
+    signupLocationChanged,
     signupPassword1Changed,
     signupPassword2Changed,
     signupPositionChanged,

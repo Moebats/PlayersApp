@@ -4,6 +4,8 @@ import firebase from 'firebase';
 import {
   SIGNUP_CLICKED,
   SIGNUP_EMAIL_CHANGED,
+  SIGNUP_NAME_CHANGED,
+  SIGNUP_LOCATION_CHANGED,
   SIGNUP_PASSWORD1_CHANGED,
   SIGNUP_PASSWORD2_CHANGED,
   SIGNUP_POSITION_CHANGED,
@@ -29,6 +31,21 @@ export const signupEmailChanged = (text) => {
   };
 };
 
+export const signupNameChanged = (text) => {
+  return {
+    type: SIGNUP_NAME_CHANGED,
+    payload: text
+  };
+};
+
+export const signupLocationChanged = (text) => {
+  return {
+    type: SIGNUP_LOCATION_CHANGED,
+    payload: text
+  };
+};
+
+
 export const signupPassword1Changed = (text) => {
   return {
     type: SIGNUP_PASSWORD1_CHANGED,
@@ -52,7 +69,7 @@ export const signupPositionChanged = (text) => {
 
 //Add other user sign up feild actions below
 
-export const signupUser = ({ email, password, position }) => {
+export const signupUser = ({ email, name, location, password, position }) => {
   return (dispatch) => {
     dispatch({ type: SIGNUP_USER });
 
@@ -66,6 +83,8 @@ export const signupUser = ({ email, password, position }) => {
 
          usersRef.child(currentUser.uid).set({
              email,
+             name,
+             location,
              position
            });
       })

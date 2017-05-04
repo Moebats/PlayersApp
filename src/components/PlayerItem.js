@@ -1,31 +1,28 @@
 import React, { Component } from 'react';
-import { Text, TouchableWithoutFeedback, View } from 'react-native';
-import { CardSection } from './common';
+import { Container, Content, ListItem, Thumbnail, Text, Body, Left, Right, Icon } from 'native-base';
+
 
 class PlayerItem extends Component {
 
   render() {
-    const { email, position } = this.props.user;
+    const { name, location, position } = this.props.user;
 
     return (
-      <TouchableWithoutFeedback>
-        <View>
-          <CardSection>
-            <Text style={styles.titleStyle}>
-              Player email: {email} {'\n'}
-              Player position: {position}
-            </Text>
-          </CardSection>
-        </View>
-      </TouchableWithoutFeedback>
+                <ListItem avatar>
+                    <Left>
+                        <Thumbnail source={require('./avatar.png')} />
+                    </Left>
+                    <Body>
+                        <Text>{name}</Text>
+                        <Text note>Player type: {position}</Text>
+                        <Text note>Location: {location}</Text>
+                    </Body>
+                    <Right>
+                        <Icon name='chatboxes' style={{fontSize: 20, color: '#1ec949'}} />
+                    </Right>
+                </ListItem>
     );
   }
 }
-const styles = {
-  titleStyle: {
-    fontSize: 14,
-    paddingLeft: 15
-  }
-};
 
 export default PlayerItem;

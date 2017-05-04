@@ -2,7 +2,7 @@ import React from 'react';
 import { Scene, Router } from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
 import SignupForm from './components/SignupForm';
-import PlayerList from './components/PlayerList';
+import UserMain from './components/UserMain';
 
 const RouterComponent = () => {
   return (
@@ -10,10 +10,11 @@ const RouterComponent = () => {
       <Scene key="auth">
         <Scene key="login" component={LoginForm} hideNavBar />
         <Scene key="signup" component={SignupForm} hideNavBar={false} title='Sign Up' />
+        
       </Scene>
       <Scene key="main">
         <Scene
-        key="playerList" component={PlayerList}
+        key="UserMain" component={UserMain}
         title="Players list"
         rightTitle="My Profile" initial
         />
