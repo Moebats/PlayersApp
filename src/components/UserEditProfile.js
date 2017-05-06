@@ -125,7 +125,7 @@ class UserEditProfile extends Component {
             <CardSection>
               <Input
                 label="Email"
-
+                placeholder={this.props.userArray[this.returnId()].email}
                 onChangeText={this.onEmailChange.bind(this)}
                 value={this.props.email}
               />
@@ -180,7 +180,7 @@ class UserEditProfile extends Component {
              onAccept={this.onAccept.bind(this)}
              onDecline={this.onDecline.bind(this)}
             >
-              Are you sure you want to delete you account?
+              Are you sure you want to delete your account? 
             </Confirm>
           </Card>
 
