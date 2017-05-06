@@ -8,7 +8,11 @@ import {
   SIGNUP_POSITION_CHANGED,
   SIGNUP_USER,
   SIGNUP_USER_FAIL,
-  SIGNUP_USER_SUCCESS
+  SIGNUP_USER_SUCCESS,
+  SIGNUP_LOCATION_CHANGED,
+  SIGNUP_CITY_CHANGED,
+  SIGNUP_SHOW_MODAL,
+  SIGNUP_MODAL_LIST
 } from './types';
 
 export const signupClicked = () => {
@@ -42,6 +46,34 @@ export const signupPassword2Changed = (text) => {
 export const signupPositionChanged = (text) => {
   return {
     type: SIGNUP_POSITION_CHANGED,
+    payload: text
+  };
+};
+
+export const signupGeoLocationChanged = (text) => {
+  return {
+    type: SIGNUP_LOCATION_CHANGED,
+    payload: text
+  };
+};
+
+export const signupCityChanged = (text) => {
+  return {
+    type: SIGNUP_CITY_CHANGED,
+    payload: text
+  };
+};
+
+export const signupShowModal = (text) => {
+  return {
+    type: SIGNUP_SHOW_MODAL,
+    payload: text
+  };
+};
+
+export const signupModalList = (text) => {
+  return {
+    type: SIGNUP_MODAL_LIST,
     payload: text
   };
 };

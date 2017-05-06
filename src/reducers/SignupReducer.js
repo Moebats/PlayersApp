@@ -4,9 +4,13 @@ import {
   SIGNUP_PASSWORD1_CHANGED,
   SIGNUP_PASSWORD2_CHANGED,
   SIGNUP_POSITION_CHANGED,
+  SIGNUP_LOCATION_CHANGED,
+  SIGNUP_CITY_CHANGED,
   SIGNUP_USER,
   SIGNUP_USER_FAIL,
-  SIGNUP_USER_SUCCESS
+  SIGNUP_USER_SUCCESS,
+  SIGNUP_SHOW_MODAL,
+  SIGNUP_MODAL_LIST
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -15,8 +19,12 @@ const INITIAL_STATE = {
   password2: '',
   position: 'batsman',
   user: null,
+  location: null,
+  city: '',
   error: '',
-  loading: false
+  loading: false,
+  showModal: false,
+  modalList: []
 };
 
 const EmailValidator = require('email-validator');
@@ -24,7 +32,7 @@ const EmailValidator = require('email-validator');
 const validate = (state) => {
   //validate email
   if (state.email.length > 0 && !EmailValidator.validate(state.email)) {
-    return { ...state, error: 'Email format incorrect.' };
+    return { ...state, error: 'Email format incorrect' };
   }
 
   //validate password equality
@@ -57,6 +65,22 @@ const SignupReducer = (state = INITIAL_STATE, action) => {
       }
       case SIGNUP_POSITION_CHANGED: {
         newStateObj = { ...state, position: action.payload };
+        break;
+      }
+      case SIGNUP_LOCATION_CHANGED: {
+        newStateObj = { ...state, location: action.payload };
+        break;
+      }
+      case SIGNUP_CITY_CHANGED: {
+        newStateObj = { ...state, city: action.payload };
+        break;
+      }
+      case SIGNUP_SHOW_MODAL: {
+        newStateObj = { ...state, showModal: action.payload };
+        break;
+      }
+      case SIGNUP_MODAL_LIST: {
+        newStateObj = { ...state, modalList: action.payload };
         break;
       }
       case SIGNUP_USER: {
