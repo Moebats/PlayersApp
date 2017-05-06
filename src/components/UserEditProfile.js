@@ -15,22 +15,13 @@ import {
 import { Card, CardSection, Input, Button, Spinner, Confirm } from './common';
 
 class UserEditProfile extends Component {
-  state = { showModal: false, rerender: false };
+  state = { showModal: false };
 
   componentWillMount() {
     const { currentUser } = firebase.auth();
     const id = currentUser.uid;
     console.log(id);
     console.log(this.props.userArray[id]);
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    // You can access `this.props` and `this.state` here
-    // This function should return a boolean, whether the component should re-render.
-    if (this.state.rerender) {
-      return false;
-    }
-    return true;
   }
 
   //calling action creators
@@ -101,7 +92,6 @@ class UserEditProfile extends Component {
     );
   }
   onAccept() {
-    this.setState({ rerender: true });
     firebase.database().ref('/users').off();
     const usersRef = firebase.database().ref('/users');
     usersRef.child(this.returnId()).remove().then(() => {
@@ -180,7 +170,7 @@ class UserEditProfile extends Component {
              onAccept={this.onAccept.bind(this)}
              onDecline={this.onDecline.bind(this)}
             >
-              Are you sure you want to delete your account? 
+              Are you sure you want to delete your account?
             </Confirm>
           </Card>
 
