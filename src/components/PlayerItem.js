@@ -18,7 +18,7 @@ class PlayerItem extends Component {
                         <Text note>Location: {location}</Text>
                     </Body>
                     <Right>
-                        <Icon name='chatboxes' style={{fontSize: 20, color: '#1ec949'}} />
+                        <Icon name='chatboxes' style={{ fontSize: 20, color: '#1ec949' }} />
                     </Right>
                 </ListItem>
     );

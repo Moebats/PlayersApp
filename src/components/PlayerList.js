@@ -36,6 +36,10 @@ class PlayerList extends Component {
         });
   }
 
+  userProfile() {
+    Actions.userEdit();
+  }
+
   renderRow(user) {
   return <PlayerItem user={user} />;
 }
@@ -56,6 +60,16 @@ class PlayerList extends Component {
            </Button>
          </CardSection>
        </Card>
+
+       <Card>
+        <CardSection>
+          <Button onPress={this.userProfile.bind(this)}>
+            Your profile
+          </Button>
+        </CardSection>
+      </Card>
+
+
      </View>
     );
   }
