@@ -10,8 +10,32 @@ import {
 import { Card, CardSection, Button, Spinner } from './common';
 import GeocodingUtil from '../utils/GeocodingUtil';
 
+/**
+  The LocationModal is a component that is hidden by default and sits
+  on top of a rendered component. The purpose of this modal is too allow
+  a user to manually enter an address and the search results are shown
+  inside a listview. The user can then select the address corresponding
+  to theirs which will fire the onGeoLocationSuccess callback. See
+  SignupForm for its usage. This component is used in conjunction with
+  the LocationButton but not necessary.
+
+  User of this component needs to ensure that the 4 required function
+  props are passed. These props are:
+
+  visible - show/hide the modal
+
+  onGeoLocationSuccess - Callback function if location service successfully
+  obtains the geolocation
+
+  onLocationSuccess - Callback function if a city is successfully retrieved
+  using google api based on the geolocation
+*/
 class LocationModal extends Component {
 
+  /**
+    Constructor used to bind the methods with this component. Apparently
+    this is best practice for binding for ES6.
+  */
   constructor(props) {
     super(props);
     this.lookupAddress = this.lookupAddress.bind(this);
@@ -20,15 +44,28 @@ class LocationModal extends Component {
     this.renderRow = this.renderRow.bind(this);
   }
 
+  /**
+    Called before component is mounted. set the initial state, search input
+    set to empty string and loading spinner is disabled. We also set a
+    datasource for our listview with an empty array.
+  */
   componentWillMount() {
     this.state = { search: '', loading: false };
     this.createDataSource([]);
   }
 
+  /**
+    This method is called when a city is successfully obtained from the
+    selected address. In turn it calls the prop function onLocationSuccess.
+  */
   onLocationSuccess(location) {
     return this.props.onLocationSuccess(location);
   }
 
+  /**
+    This method is called when geolocation is successfully obtained from the
+    selected address. In turn it calls the prop function onGeoLocationSuccess.
+  */
   onGeoLocationSuccess(location) {
     return this.props.onGeoLocationSuccess(location);
   }
@@ -40,9 +77,18 @@ class LocationModal extends Component {
 
     console.log(results);
     this.dataSource = ds.cloneWithRows(results);
+    //force update so that this component is re-rendered even though there
+    //is no state change.
     this.forceUpdate();
   }
 
+  /**
+    Callback fired when the address 'Search' button is hit. This will cause
+    the loading spinner to render while we try to retrieve a list of matching
+    addresses using google api. On success, we set our datasource with the
+    results. We make sure the loading spinner is disabled afterwards, even
+    on an error.
+  */
   lookupAddress() {
     this.setState({ loading: true });
     GeocodingUtil.getFromLocation(this.state.search)
@@ -55,6 +101,9 @@ class LocationModal extends Component {
     });
   }
 
+  /**
+    Renders search button or spinner depending on the 'loading' state
+  */
   renderButton() {
     if (this.state.loading) {
       return <Spinner size="large" />;
@@ -66,6 +115,11 @@ class LocationModal extends Component {
     );
   }
 
+  /**
+    Render a listview row using an inner class component called
+    LocationListItem which takes to prop callback funtions and
+    the appropriate address related json data.
+  */
   renderRow(result) {
     return (
       <LocationListItem
