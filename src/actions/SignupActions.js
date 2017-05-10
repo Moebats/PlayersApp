@@ -11,8 +11,7 @@ import {
   SIGNUP_USER_SUCCESS,
   SIGNUP_LOCATION_CHANGED,
   SIGNUP_CITY_CHANGED,
-  SIGNUP_SHOW_MODAL,
-  SIGNUP_MODAL_LIST
+  SIGNUP_SHOW_MODAL
 } from './types';
 
 export const signupClicked = () => {
@@ -71,14 +70,7 @@ export const signupShowModal = (text) => {
   };
 };
 
-export const signupModalList = (text) => {
-  return {
-    type: SIGNUP_MODAL_LIST,
-    payload: text
-  };
-};
-
-export const signupUser = ({ email, password, position }) => {
+export const signupUser = ({ email, password, position, location, city }) => {
   return (dispatch) => {
     dispatch({ type: SIGNUP_USER });
 

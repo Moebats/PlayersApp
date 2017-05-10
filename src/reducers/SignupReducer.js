@@ -9,8 +9,7 @@ import {
   SIGNUP_USER,
   SIGNUP_USER_FAIL,
   SIGNUP_USER_SUCCESS,
-  SIGNUP_SHOW_MODAL,
-  SIGNUP_MODAL_LIST
+  SIGNUP_SHOW_MODAL
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -23,8 +22,7 @@ const INITIAL_STATE = {
   city: '',
   error: '',
   loading: false,
-  showModal: false,
-  modalList: []
+  showModal: false
 };
 
 const EmailValidator = require('email-validator');
@@ -39,6 +37,14 @@ const validate = (state) => {
   if ((state.password1.length > 0 || state.password2.length) > 0
                 && (state.password1 !== state.password2)) {
     return { ...state, error: 'Passwords don\'t match' };
+  } else if (state.password1.length === 0) {
+    return { ...state, error: 'Password is empty' };
+  }
+
+  //validate city,location
+  //validate password equality
+  if (state.city === '') {
+    return { ...state, error: 'Location is not set' };
   }
 
   return { ...state, error: '' };
@@ -77,10 +83,6 @@ const SignupReducer = (state = INITIAL_STATE, action) => {
       }
       case SIGNUP_SHOW_MODAL: {
         newStateObj = { ...state, showModal: action.payload };
-        break;
-      }
-      case SIGNUP_MODAL_LIST: {
-        newStateObj = { ...state, modalList: action.payload };
         break;
       }
       case SIGNUP_USER: {

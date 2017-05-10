@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, Picker } from 'react-native';
 import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
 import {
   signupEmailChanged,
   signupPassword1Changed,
@@ -18,6 +17,10 @@ import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class SignupForm extends Component {
 
+  /**
+    Constructor used to bind the methods with this component. Apparently
+    this is best practice for binding for ES6.
+  */
   constructor(props) {
     super(props);
     //SignupForm method binds
@@ -34,6 +37,7 @@ class SignupForm extends Component {
   }
 
   onGeoLocationSuccess(geolocation) {
+    this.props.signupShowModal(false);
     this.props.signupGeoLocationChanged(geolocation);
   }
 
@@ -43,7 +47,7 @@ class SignupForm extends Component {
   }
 
   onCancelPressed() {
-    Actions.login({ type: 'reset' });
+    // Do nothing and return to the form
   }
 
   onManuallyEnterLocation() {
@@ -67,8 +71,8 @@ class SignupForm extends Component {
   }
 
   onSignupPress() {
-    const { email, password1, position } = this.props;
-    this.props.signupUser({ email, password: password1, position });
+    const { email, password1, position, location, city } = this.props;
+    this.props.signupUser({ email, password: password1, position, location, city });
   }
 
   renderButton() {
@@ -77,7 +81,10 @@ class SignupForm extends Component {
     }
 
     return (
-      <Button onPress={this.onSignupPress} >
+      <Button
+        onPress={this.onSignupPress}
+        disabled={this.props.error !== ''}
+      >
         Sign Up
       </Button>
     );
@@ -188,9 +195,9 @@ const styles = {
 
 const mapStateToProps = ({ signup }) => {
   const { email, password1, password2, position,
-    city, error, loading, showModal } = signup;
+    city, error, loading, showModal, location } = signup;
 
-  return { email, password1, password2, position, city, error, loading, showModal };
+  return { email, password1, password2, position, city, error, loading, showModal, location };
 };
 
 export default connect(mapStateToProps,

@@ -171,8 +171,26 @@ class LocationModal extends Component {
   }
 }
 
+/**
+  LocationListItem is an inner class specialized to be used inside the
+  LocationModal listview.
+
+  User of this component needs to ensure that the 2 required function
+  props are passed. These props are:
+
+  onGeoLocationSuccess - Callback function if location service successfully
+  obtains the geolocation
+
+  onLocationSuccess - Callback function if a city is successfully retrieved
+  using google api based on the geolocation
+*/
 class LocationListItem extends Component {
 
+  /**
+    This method is invoked when a listview item is selected. The city and
+    geolocation values are extracted from the listitem and approproate
+    callbacks are fired.
+  */
   onRowPress() {
     GeocodingUtil.getCityFromResponse({ results: [this.props.result] })
     .then((city) => {

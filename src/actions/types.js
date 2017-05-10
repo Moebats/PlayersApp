@@ -14,7 +14,6 @@ export const SIGNUP_POSITION_CHANGED = 'signup_position_changed';
 export const SIGNUP_LOCATION_CHANGED = 'signup_location_changed';
 export const SIGNUP_CITY_CHANGED = 'signup_city_changed';
 export const SIGNUP_SHOW_MODAL = 'signup_show_modal';
-export const SIGNUP_MODAL_LIST = 'signup_modal_list';
 export const SIGNUP_USER = 'signup_user';
 export const SIGNUP_USER_FAIL = 'signup_user_fail';
 export const SIGNUP_USER_SUCCESS = 'signup_user_success';
