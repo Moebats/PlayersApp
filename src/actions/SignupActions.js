@@ -70,13 +70,39 @@ export const signupShowModal = (text) => {
   };
 };
 
-export const signupUser = ({ email, password, position, location, city }) => {
+//Add other user sign up feild actions below
+
+export const signupUser = ({ email, name, location, city, password, position }) => {
   return (dispatch) => {
     dispatch({ type: SIGNUP_USER });
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
-      .then(user => signupSuccess(dispatch, user))
+    //After succesful user creation, .set creates a new entry
+    //in the database using authentication uid instead of .push new unique ID
+      .then(function(user){
+         signupSuccess(dispatch, user);
+         const { currentUser } = firebase.auth();
+         const usersRef = firebase.database().ref('/users');
+
+         usersRef.child(currentUser.uid).set({
+             email,
+             name,
+             location,
+             city,
+             position
+           });
+      })
       .catch((error) => signupFail(dispatch, error));
+    };
+};
+
+export const playerFetch = () => {
+  return (dispatch) => {
+    const playerRef = firebase.database().ref('/users');
+    playerRef
+      .on('value', snapshot => {
+      dispatch({ type: PLAYER_FETCH_SUCCESS, payload: snapshot.val() });
+      });
   };
 };
 

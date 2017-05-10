@@ -136,6 +136,7 @@ class LocationModal extends Component {
     return (
       <Modal
         animationType={'slide'}
+        onRequestClose={() => {}}
         transparent
         visible={this.props.visible}
       >
