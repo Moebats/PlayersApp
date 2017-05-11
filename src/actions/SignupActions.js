@@ -12,6 +12,9 @@ import {
   SIGNUP_USER,
   SIGNUP_USER_FAIL,
   SIGNUP_USER_SUCCESS,
+  SIGNUP_LOCATION_CHANGED,
+  SIGNUP_CITY_CHANGED,
+  SIGNUP_SHOW_MODAL,
   PLAYER_FETCH_SUCCESS
 } from './types';
 
@@ -67,9 +70,30 @@ export const signupPositionChanged = (text) => {
   };
 };
 
+export const signupGeoLocationChanged = (text) => {
+  return {
+    type: SIGNUP_LOCATION_CHANGED,
+    payload: text
+  };
+};
+
+export const signupCityChanged = (text) => {
+  return {
+    type: SIGNUP_CITY_CHANGED,
+    payload: text
+  };
+};
+
+export const signupShowModal = (text) => {
+  return {
+    type: SIGNUP_SHOW_MODAL,
+    payload: text
+  };
+};
+
 //Add other user sign up feild actions below
 
-export const signupUser = ({ email, name, location, password, position }) => {
+export const signupUser = ({ email, name, location, city, password, position }) => {
   return (dispatch) => {
     dispatch({ type: SIGNUP_USER });
 
@@ -85,6 +109,7 @@ export const signupUser = ({ email, name, location, password, position }) => {
              email,
              name,
              location,
+             city,
              position
            });
       })

@@ -5,10 +5,15 @@ import firebase from 'firebase';
 import ReduxThunk from 'redux-thunk';
 import reducers from './reducers';
 import Router from './Router';
+import Geocoder from './utils/GeocodingUtil';
 
 class App extends Component {
 
   componentWillMount() {
+    //Set apikey for use with Google Location API
+    Geocoder.setApiKey('AIzaSyAXblCv7CV5I3CyZme1JegeuAf76gU0Tys');
+
+    //Set apikey for use with firebase
     firebase.initializeApp({
       apiKey: 'AIzaSyBIMcNMb29LqC3-CjxFg81tq6EG3ENyuWU',
       authDomain: 'cricket-bc128.firebaseapp.com',

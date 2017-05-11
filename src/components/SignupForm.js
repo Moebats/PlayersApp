@@ -9,14 +9,55 @@ import {
   signupPassword1Changed,
   signupPassword2Changed,
   signupPositionChanged,
-  signupUser
+  signupGeoLocationChanged,
+  signupCityChanged,
+  signupUser,
+  signupShowModal
  } from '../actions';
 
+import LocationModal from './LocationModal';
+import LocationButton from './LocationButton';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class SignupForm extends Component {
 
-  //calling action creators
+  /**
+    Constructor used to bind the methods with this component. Apparently
+    this is best practice for binding for ES6.
+  */
+  constructor(props) {
+    super(props);
+    //SignupForm method binds
+    this.onEmailChange = this.onEmailChange.bind(this);
+    this.onPassword1Change = this.onPassword1Change.bind(this);
+    this.onPassword2Change = this.onPassword2Change.bind(this);
+    this.onPositionChange = this.onPositionChange.bind(this);
+    this.onSignupPress = this.onSignupPress.bind(this);
+    //LocationButton method binds
+    this.onManuallyEnterLocation = this.onManuallyEnterLocation.bind(this);
+    this.onGeoLocationSuccess = this.onGeoLocationSuccess.bind(this);
+    this.onLocationSuccess = this.onLocationSuccess.bind(this);
+    this.onCancelPressed = this.onCancelPressed.bind(this);
+  }
+
+  onGeoLocationSuccess(geolocation) {
+    this.props.signupShowModal(false);
+    this.props.signupGeoLocationChanged(geolocation);
+  }
+
+  onLocationSuccess(location) {
+    this.props.signupShowModal(false);
+    this.props.signupCityChanged(location);
+  }
+
+  onCancelPressed() {
+    // Do nothing and return to the form
+  }
+
+  onManuallyEnterLocation() {
+    this.props.signupShowModal(true);
+  }
+
   onEmailChange(text) {
     this.props.signupEmailChanged(text);
   }
@@ -42,8 +83,8 @@ class SignupForm extends Component {
   }
 
   onSignupPress() {
-    const { email, name, location, password1, position } = this.props;
-    this.props.signupUser({ email, name, location, password: password1, position });
+    const { email, password1, position, location, city } = this.props;
+    this.props.signupUser({ email, password: password1, position, location, city });
   }
 
   renderButton() {
@@ -52,7 +93,10 @@ class SignupForm extends Component {
     }
 
     return (
-      <Button onPress={this.onSignupPress.bind(this)} >
+      <Button
+        onPress={this.onSignupPress}
+        disabled={this.props.error !== ''}
+      >
         Sign Up
       </Button>
     );
@@ -63,12 +107,18 @@ class SignupForm extends Component {
 
     return (
         <View style={container}>
+          <LocationModal
+            visible={this.props.showModal}
+            onLocationSuccess={this.onLocationSuccess}
+            onGeoLocationSuccess={this.onGeoLocationSuccess}
+          />
           <Card>
             <CardSection>
               <Input
+                editable
                 label="Email"
                 placeholder="email@gmail.com"
-                onChangeText={this.onEmailChange.bind(this)}
+                onChangeText={this.onEmailChange}
                 value={this.props.email}
               />
             </CardSection>
@@ -94,9 +144,10 @@ class SignupForm extends Component {
             <CardSection>
               <Input
                 secureTextEntry
+                editable
                 label="Password"
                 placeholder="password"
-                onChangeText={this.onPassword1Change.bind(this)}
+                onChangeText={this.onPassword1Change}
                 value={this.props.password1}
               />
             </CardSection>
@@ -104,19 +155,35 @@ class SignupForm extends Component {
             <CardSection>
               <Input
                 secureTextEntry
+                editable
                 label="Confirm Password"
                 placeholder="password"
-                onChangeText={this.onPassword2Change.bind(this)}
+                onChangeText={this.onPassword2Change}
                 value={this.props.password2}
               />
             </CardSection>
 
+              <LocationButton
+                onCancelPressed={this.onCancelPressed}
+                onGeoLocationSuccess={this.onGeoLocationSuccess}
+                onLocationSuccess={this.onLocationSuccess}
+                onManuallyEnterLocation={this.onManuallyEnterLocation}
+              >
+            <CardSection>
+                <Input
+                  label="Location"
+                  placeholder=""
+                  editable={false}
+                  value={this.props.city}
+                />
+            </CardSection>
+          </LocationButton>
             <CardSection style={{ flexDirection: 'row' }}>
               <Text style={styles.pickerTextStyle}>Position</Text>
               <Picker
                 style={{ flex: 1 }}
                 selectedValue={this.props.position}
-                onValueChange={this.onPositionChange.bind(this)}
+                onValueChange={this.onPositionChange}
               >
                   <Picker.Item label="Batsman" value="batsman" />
                   <Picker.Item label="Bowler" value="bowler" />
@@ -133,7 +200,6 @@ class SignupForm extends Component {
               {this.renderButton()}
             </CardSection>
           </Card>
-
         </View>
     );
   }
@@ -158,9 +224,10 @@ const styles = {
 };
 
 const mapStateToProps = ({ signup }) => {
-  const { email, name, location, password1, password2, position, error, loading } = signup;
+  const { email, password1, password2, position,
+    city, error, loading, showModal, location } = signup;
 
-  return { email, name, location, password1, password2, position, error, loading };
+  return { email, password1, password2, position, city, error, loading, showModal, location };
 };
 
 export default connect(mapStateToProps,
@@ -171,5 +238,8 @@ export default connect(mapStateToProps,
     signupPassword1Changed,
     signupPassword2Changed,
     signupPositionChanged,
-    signupUser
+    signupGeoLocationChanged,
+    signupCityChanged,
+    signupUser,
+    signupShowModal
 })(SignupForm);
