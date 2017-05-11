@@ -2,7 +2,6 @@ import {
   SIGNUP_CLICKED,
   SIGNUP_EMAIL_CHANGED,
   SIGNUP_NAME_CHANGED,
-  SIGNUP_LOCATION_CHANGED,
   SIGNUP_PASSWORD1_CHANGED,
   SIGNUP_PASSWORD2_CHANGED,
   SIGNUP_POSITION_CHANGED,
@@ -17,7 +16,6 @@ import {
 const INITIAL_STATE = {
   email: '',
   name: '',
-  location: '',
   password1: '',
   password2: '',
   position: 'batsman',
@@ -76,10 +74,6 @@ const SignupReducer = (state = INITIAL_STATE, action) => {
       }
       case SIGNUP_NAME_CHANGED: {
         newStateObj = { ...state, name: action.payload };
-        break;
-      }
-      case SIGNUP_LOCATION_CHANGED: {
-        newStateObj = { ...state, location: action.payload };
         break;
       }
       case SIGNUP_PASSWORD1_CHANGED: {

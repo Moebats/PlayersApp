@@ -134,15 +134,6 @@ class SignupForm extends Component {
 
             <CardSection>
               <Input
-                label="Location"
-                placeholder="Toronto"
-                onChangeText={this.onLocationChange.bind(this)}
-                value={this.props.location}
-              />
-            </CardSection>
-
-            <CardSection>
-              <Input
                 secureTextEntry
                 editable
                 label="Password"
@@ -163,21 +154,21 @@ class SignupForm extends Component {
               />
             </CardSection>
 
-              <LocationButton
-                onCancelPressed={this.onCancelPressed}
-                onGeoLocationSuccess={this.onGeoLocationSuccess}
-                onLocationSuccess={this.onLocationSuccess}
-                onManuallyEnterLocation={this.onManuallyEnterLocation}
-              >
-            <CardSection>
-                <Input
-                  label="Location"
-                  placeholder=""
-                  editable={false}
-                  value={this.props.city}
-                />
-            </CardSection>
-          </LocationButton>
+            <LocationButton
+              onCancelPressed={this.onCancelPressed}
+              onGeoLocationSuccess={this.onGeoLocationSuccess}
+              onLocationSuccess={this.onLocationSuccess}
+              onManuallyEnterLocation={this.onManuallyEnterLocation}
+            >
+              <CardSection>
+                  <Input
+                    label="Location"
+                    placeholder="Toronto"
+                    editable={false}
+                    value={this.props.city}
+                  />
+              </CardSection>
+            </LocationButton>
             <CardSection style={{ flexDirection: 'row' }}>
               <Text style={styles.pickerTextStyle}>Position</Text>
               <Picker
@@ -224,10 +215,10 @@ const styles = {
 };
 
 const mapStateToProps = ({ signup }) => {
-  const { email, password1, password2, position,
+  const { name, email, password1, password2, position,
     city, error, loading, showModal, location } = signup;
 
-  return { email, password1, password2, position, city, error, loading, showModal, location };
+  return { name, email, password1, password2, position, city, error, loading, showModal, location };
 };
 
 export default connect(mapStateToProps,
