@@ -5,7 +5,7 @@ import { Container, Content, ListItem, Thumbnail, Text, Body, Left, Right, Icon 
 class PlayerItem extends Component {
 
   render() {
-    const { name, location, position } = this.props.user;
+    const { name, city, position } = this.props.user;
 
     return (
                 <ListItem avatar>
@@ -15,7 +15,7 @@ class PlayerItem extends Component {
                     <Body>
                         <Text>{name}</Text>
                         <Text note>Player type: {position}</Text>
-                        <Text note>Location: {location}</Text>
+                        <Text note>Location: {city}</Text>
                     </Body>
                     <Right>
                         <Icon name='chatboxes' style={{ fontSize: 20, color: '#1ec949' }} />
