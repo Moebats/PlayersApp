@@ -8,7 +8,7 @@ import { Actions } from 'react-native-router-flux';
 import {
   signupEmailChanged,
   signupNameChanged,
-  signupLocationChanged,
+  signupCityChanged,
   signupPositionChanged
  } from '../actions';
 
@@ -21,7 +21,7 @@ class UserEditProfile extends Component {
     const { currentUser } = firebase.auth();
     const id = currentUser.uid;
     console.log(id);
-    console.log(this.props.userArray[id]);
+    console.log(this.props.usersObject[id]);
   }
 
   //calling action creators
@@ -33,8 +33,8 @@ class UserEditProfile extends Component {
     this.props.signupNameChanged(text);
   }
 
-  onLocationChange(text) {
-    this.props.signupLocationChanged(text);
+  onCityChange(text) {
+    this.props.signupCityChanged(text);
   }
 
   onPositionChange(text) {
@@ -42,14 +42,14 @@ class UserEditProfile extends Component {
   }
 
   onSavePress() {
-    const { email, name, location, position } = this.props;
+    const { email, name, city, position } = this.props;
     const usersRef = firebase.database().ref('/users');
     const userSave = firebase.auth().currentUser;
 
     usersRef.child(this.returnId()).set({
         email,
         name,
-        location,
+        city,
         position
       });
 
@@ -115,7 +115,7 @@ class UserEditProfile extends Component {
             <CardSection>
               <Input
                 label="Email"
-                placeholder={this.props.userArray[this.returnId()].email}
+                placeholder={this.props.usersObject[this.returnId()].email}
                 onChangeText={this.onEmailChange.bind(this)}
                 value={this.props.email}
               />
@@ -124,7 +124,7 @@ class UserEditProfile extends Component {
             <CardSection>
               <Input
                 label="Name"
-                placeholder={this.props.userArray[this.returnId()].name}
+                placeholder={this.props.usersObject[this.returnId()].name}
                 onChangeText={this.onNameChange.bind(this)}
                 value={this.props.name}
               />
@@ -132,10 +132,10 @@ class UserEditProfile extends Component {
 
             <CardSection>
               <Input
-                label="Location"
-                placeholder={this.props.userArray[this.returnId()].location}
-                onChangeText={this.onLocationChange.bind(this)}
-                value={this.props.location}
+                label="City"
+                placeholder={this.props.usersObject[this.returnId()].city}
+                onChangeText={this.onCityChange.bind(this)}
+                value={this.props.city}
               />
             </CardSection>
 
@@ -198,16 +198,16 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ signup, users }) => {
-  const { email, name, location, position, error, loading } = signup;
-  const userArray = users;
+  const { email, name, city, position, error, loading } = signup;
+  const usersObject = users;
 
-  return { userArray, email, name, location, position, error, loading };
+  return { usersObject, email, name, city, position, error, loading };
 };
 
 export default connect(mapStateToProps,
   {
     signupEmailChanged,
     signupNameChanged,
-    signupLocationChanged,
+    signupCityChanged,
     signupPositionChanged
 })(UserEditProfile);
