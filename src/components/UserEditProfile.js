@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, Picker, Modal } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
+import { Icon, Container, Button, Content, Form, Item, Input, Label} from 'native-base';
 
 
 import {
@@ -12,7 +13,7 @@ import {
   signupPositionChanged
  } from '../actions';
 
-import { Card, CardSection, Input, Button, Spinner, Confirm } from './common';
+import { Card, CardSection, Spinner, Confirm } from './common';
 
 class UserEditProfile extends Component {
   state = { showModal: false };
@@ -71,23 +72,24 @@ class UserEditProfile extends Component {
     if (this.props.loading) {
       return <Spinner size="large" />;
     }
+    const { button } = styles;
 
     return (
-      <Button onPress={this.onSavePress.bind(this)} >
-        Save changes
+      <Button block bordered success iconLeft onPress={this.onSavePress.bind(this)}
+      disabled={this.props.error !== ''} style={button} >
+        <Icon name='person' />
+        <Text>Save changes</Text>
       </Button>
     );
   }
 
   renderButtonDelete() {
-    if (this.props.loading) {
-      return <Spinner size="large" />;
-    }
-    const { buttonStyle } = styles;
-
+    const { button, whiteText } = styles;
     return (
-      <Button onPress={this.onDeletePress.bind(this)} style={buttonStyle} >
-        Delete Account
+      <Button block danger iconLeft onPress={this.onDeletePress.bind(this)}
+       style={button} >
+        <Icon name='person' />
+        <Text style={whiteText} >Delete Account</Text>
       </Button>
     );
   }
@@ -110,79 +112,81 @@ class UserEditProfile extends Component {
     const { errorTextStyle, container } = styles;
 
     return (
-        <View style={container}>
-          <Card>
-            <CardSection>
-              <Input
-                label="Email"
-                placeholder={this.props.usersObject[this.returnId()].email}
-                onChangeText={this.onEmailChange.bind(this)}
-                value={this.props.email}
-              />
-            </CardSection>
+        <Container style={container}>
+              <Content>
+                  <Form>
+                      <Item fixedLabel>
+                          <Label>Email</Label>
+                          <Input
+                            editable
+                            label="Email"
+                            placeholder={this.props.usersObject[this.returnId()].email}
+                            onChangeText={this.onEmailChange.bind(this)}
+                            value={this.props.email}
+                          />
+                      </Item>
+                      <Item fixedLabel>
+                          <Label>Name</Label>
+                          <Input
+                            label="Name"
+                            placeholder={this.props.usersObject[this.returnId()].name}
+                            onChangeText={this.onNameChange.bind(this)}
+                            value={this.props.name}
+                          />
+                      </Item>
 
-            <CardSection>
-              <Input
-                label="Name"
-                placeholder={this.props.usersObject[this.returnId()].name}
-                onChangeText={this.onNameChange.bind(this)}
-                value={this.props.name}
-              />
-            </CardSection>
+                        <Item fixedLabel>
+                            <Label>City</Label>
+                            <Input
+                              label="City"
+                              placeholder={this.props.usersObject[this.returnId()].city}
+                              onChangeText={this.onCityChange.bind(this)}
+                              value={this.props.city}
+                            />
+                        </Item>
 
-            <CardSection>
-              <Input
-                label="City"
-                placeholder={this.props.usersObject[this.returnId()].city}
-                onChangeText={this.onCityChange.bind(this)}
-                value={this.props.city}
-              />
-            </CardSection>
+                      <CardSection style={{ flexDirection: 'row' }}>
+                        <Picker
+                          style={{ flex: 1 }}
+                          selectedValue={this.props.position}
+                          onValueChange={this.onPositionChange}
+                        >
+                            <Picker.Item label="Batsman" value="batsman" />
+                            <Picker.Item label="Bowler" value="bowler" />
+                            <Picker.Item label="Wicket Keeper" value="wicketkeeper" />
+                            <Picker.Item label="All Rounder" value="allrounder" />
+                        </Picker>
+                      </CardSection>
 
-            <CardSection style={{ flexDirection: 'row' }}>
-              <Text style={styles.pickerTextStyle}>Position</Text>
-              <Picker
-                style={{ flex: 1 }}
-                selectedValue={this.props.position}
-                onValueChange={this.onPositionChange.bind(this)}
-              >
-                  <Picker.Item label="Batsman" value="batsman" />
-                  <Picker.Item label="Bowler" value="bowler" />
-                  <Picker.Item label="Wicket Keeper" value="wicketkeeper" />
-                  <Picker.Item label="All Rounder" value="allrounder" />
-              </Picker>
-            </CardSection>
+                      <Text style={errorTextStyle}>
+                        {this.props.error}
+                      </Text>
+                  </Form>
 
-            <Text style={errorTextStyle}>
-              {this.props.error}
-            </Text>
+                    {this.renderButton()}
+                    {this.renderButtonDelete()}
 
-            <CardSection>
-              {this.renderButton()}
-            </CardSection>
-
-            <CardSection>
-              {this.renderButtonDelete()}
-            </CardSection>
-
-            <Confirm
-             visible={this.state.showModal}
-             onAccept={this.onAccept.bind(this)}
-             onDecline={this.onDecline.bind(this)}
-            >
-              Are you sure you want to delete your account?
-            </Confirm>
-          </Card>
-
-        </View>
+                  <Confirm
+                   visible={this.state.showModal}
+                   onAccept={this.onAccept.bind(this)}
+                   onDecline={this.onDecline.bind(this)}
+                  >
+                    Are you sure you want to delete your account?
+                  </Confirm>
+              </Content>
+          </Container>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
+  button: {
+    margin: 10
+  },
   container: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginTop: 80
   },
   pickerTextStyle: {
     fontSize: 18,
@@ -194,8 +198,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: 'center',
     color: 'red'
+  },
+  whiteText: {
+    color: 'white'
   }
-});
+};
 
 const mapStateToProps = ({ signup, users }) => {
   const { email, name, city, position, error, loading } = signup;

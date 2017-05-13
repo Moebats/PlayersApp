@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { emailChanged, passwordChanged, loginUser, signupClicked } from '../actions';
-import { Card, CardSection, Input, Button, Spinner } from './common';
-
-const splash = require('../images/splash.jpg');
+import { Card, CardSection, Spinner } from './common';
+import { Icon, Container, Button, Content, Form, Item, Input,Label} from 'native-base';
 
 class LoginForm extends Component {
   onEmailChange(text) {
@@ -29,11 +28,13 @@ class LoginForm extends Component {
     if (this.props.loading) {
       return <Spinner size="large" />;
     }
+    const { whiteText, button } = styles;
 
     return (
-      <Button onPress={this.onLoginPress.bind(this)}>
-        Login
-      </Button>
+        <Button block success iconLeft onPress={this.onLoginPress.bind(this)} style={button} >
+          <Icon name='person' />
+          <Text style={whiteText} >Login</Text>
+        </Button>
     );
   }
 
@@ -41,60 +42,53 @@ class LoginForm extends Component {
     const { signUpStyle, errorTextStyle, container, image } = styles;
 
     return (
-      <Image style={image} source={splash}>
-        <View style={container}>
-          <Card>
-            <CardSection>
-              <Input
-                label="Email"
-                placeholder="email@gmail.com"
-                onChangeText={this.onEmailChange.bind(this)}
-                value={this.props.email}
-              />
-            </CardSection>
+              <Container style={container}>
+                    <Content>
+                        <Text style={signUpStyle}>
+                          Welcome to Cricket Players App
+                        </Text>
 
-            <CardSection>
-              <Input
-                secureTextEntry
-                label="Password"
-                placeholder="password"
-                onChangeText={this.onPasswordChange.bind(this)}
-                value={this.props.password}
-              />
-            </CardSection>
-
-            <Text style={errorTextStyle}>
-              {this.props.error}
-            </Text>
-
-            <CardSection>
-              {this.renderButton()}
-            </CardSection>
-          </Card>
-
-          <TouchableOpacity onPress={this.onSignupPress.bind(this)}>
-            <Text style={signUpStyle}>
-              Sign Up
-            </Text>
-          </TouchableOpacity>
-
-        </View>
-      </Image>
+                        <Form>
+                            <Item fixedLabel>
+                                <Label>Email</Label>
+                                <Input
+                                  label="Email"
+                                  placeholder="email@gmail.com"
+                                  onChangeText={this.onEmailChange.bind(this)}
+                                  value={this.props.email}
+                                />
+                            </Item>
+                            <Item fixedLabel last>
+                                <Label>Password</Label>
+                                <Input
+                                  secureTextEntry
+                                  label="Password"
+                                  placeholder="password"
+                                  onChangeText={this.onPasswordChange.bind(this)}
+                                  value={this.props.password}
+                                />
+                            </Item>
+                            <Text style={errorTextStyle}>
+                              {this.props.error}
+                            </Text>
+                        </Form>
+                        {this.renderButton()}
+                      <Button transparent block onPress={this.onSignupPress.bind(this)}>
+                        <Text>Do not have an account? Sign Up</Text>
+                      </Button>
+                    </Content>
+                </Container>
     );
   }
 }
 
 const styles = {
-  image: {
-    flex: 1,
-    width: undefined,
-    height: undefined,
-    backgroundColor: 'transparent',
-    resizeMode: 'cover'
+  button: {
+    margin: 10,
   },
   container: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   errorTextStyle: {
     fontSize: 20,
@@ -102,10 +96,16 @@ const styles = {
     color: 'red'
   },
   signUpStyle: {
-    color: '#007aff',
-    marginTop: 100,
+    fontSize: 20,
+    textAlign: 'center',
+    color: '#099b3e',
+    marginTop: 50,
+    marginBottom: 30,
     fontWeight: 'bold',
     alignSelf: 'center'
+  },
+  whiteText: {
+    color: 'white'
   }
 };
 

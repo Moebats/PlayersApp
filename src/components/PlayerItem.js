@@ -10,7 +10,7 @@ class PlayerItem extends Component {
     return (
                 <ListItem avatar>
                     <Left>
-                        <Thumbnail source={require('./avatar.png')} />
+                        <Thumbnail source={require('../images/batsman.png')} />
                     </Left>
                     <Body>
                         <Text>{name}</Text>
