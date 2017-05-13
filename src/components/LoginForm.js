@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, Image } from 'react-native';
+import { Text } from 'react-native';
 import { connect } from 'react-redux';
+import { Icon, Container, Button, Content, Form, Item, Input, Label } from 'native-base';
 import { emailChanged, passwordChanged, loginUser, signupClicked } from '../actions';
-import { Card, CardSection, Spinner } from './common';
-import { Icon, Container, Button, Content, Form, Item, Input,Label} from 'native-base';
+import { Spinner } from './common';
 
 class LoginForm extends Component {
   onEmailChange(text) {
@@ -45,7 +45,7 @@ class LoginForm extends Component {
   }
 
   render() {
-    const { signUpStyle, errorTextStyle, container, image } = styles;
+    const { signUpStyle, errorTextStyle, container } = styles;
 
     return (
               <Container style={container}>

@@ -1,10 +1,9 @@
 import firebase from 'firebase';
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Picker, Modal } from 'react-native';
+import { Text, Picker } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { Icon, Container, Button, Content, Form, Item, Input, Label} from 'native-base';
-
+import { Icon, Container, Button, Content, Form, Item, Input, Label } from 'native-base';
 import {
   signupEmailChanged,
   signupNameChanged,
@@ -12,7 +11,7 @@ import {
   signupPositionChanged
  } from '../actions';
 
-import { Card, CardSection, Spinner, Confirm } from './common';
+import { CardSection, Spinner, Confirm } from './common';
 
 class UserEditProfile extends Component {
   state = { showModal: false };
@@ -58,6 +57,21 @@ class UserEditProfile extends Component {
     this.setState({ showModal: true });
   }
 
+  onAccept() {
+    firebase.database().ref('/users').off();
+    const usersRef = firebase.database().ref('/users');
+    usersRef.child(this.returnId()).remove().then(() => {
+      Actions.auth({ type: 'reset' });
+    });
+
+    const userDelete = firebase.auth().currentUser;
+    userDelete.delete();
+  }
+
+  onDecline() {
+    this.setState({ showModal: false });
+  }
+
   returnId() {
     const { currentUser } = firebase.auth();
     const id = currentUser.uid;
@@ -72,7 +86,8 @@ class UserEditProfile extends Component {
     const { button } = styles;
 
     return (
-      <Button block bordered success iconLeft
+      <Button
+        block bordered success iconLeft
         onPress={this.onSavePress.bind(this)}
         disabled={this.props.error !== ''}
         style={button}
@@ -86,7 +101,8 @@ class UserEditProfile extends Component {
   renderButtonDelete() {
     const { button, whiteText } = styles;
     return (
-      <Button block danger iconLeft
+      <Button
+        block danger iconLeft
         onPress={this.onDeletePress.bind(this)}
         style={button}
       >
@@ -94,20 +110,6 @@ class UserEditProfile extends Component {
         <Text style={whiteText} >Delete Account</Text>
       </Button>
     );
-  }
-  onAccept() {
-    firebase.database().ref('/users').off();
-    const usersRef = firebase.database().ref('/users');
-    usersRef.child(this.returnId()).remove().then(() => {
-      Actions.auth({ type: 'reset' });
-    });
-
-    const userDelete = firebase.auth().currentUser;
-    userDelete.delete();
-  }
-
-  onDecline() {
-    this.setState({ showModal: false });
   }
 
   render() {

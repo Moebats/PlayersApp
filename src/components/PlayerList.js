@@ -2,12 +2,11 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { ListView, View } from 'react-native';
 import { connect } from 'react-redux';
+import { Text, Icon, Button } from 'native-base';
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
 import { playerFetch } from '../actions/SignupActions';
 import PlayerItem from './PlayerItem.js';
-import { Card, CardSection } from './common';
-import { Text, Icon, Container, Button, Content, Form, Item, Input, Label} from 'native-base';
 
 
 class PlayerList extends Component {
@@ -58,7 +57,8 @@ class PlayerList extends Component {
           renderRow={this.renderRow}
         />
 
-        <Button block bordered success iconLeft
+        <Button
+          block bordered success iconLeft
           onPress={this.userProfile.bind(this)}
           style={button}
         >
@@ -66,7 +66,8 @@ class PlayerList extends Component {
           <Text>User profile</Text>
         </Button>
 
-        <Button block bordered danger iconLeft
+        <Button
+          block bordered danger iconLeft
           onPress={this.logout.bind(this)}
           style={button}
         >
