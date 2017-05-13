@@ -31,7 +31,13 @@ class LoginForm extends Component {
     const { whiteText, button } = styles;
 
     return (
-        <Button block success iconLeft onPress={this.onLoginPress.bind(this)} style={button} >
+        <Button
+          block
+          success
+          iconLeft
+          onPress={this.onLoginPress.bind(this)}
+          style={button}
+        >
           <Icon name='person' />
           <Text style={whiteText} >Login</Text>
         </Button>

@@ -59,16 +59,16 @@ class PlayerList extends Component {
         />
 
         <Button block bordered success iconLeft
-        onPress={this.userProfile.bind(this)}
-        style={button}
+          onPress={this.userProfile.bind(this)}
+          style={button}
         >
           <Icon name='person' />
           <Text>User profile</Text>
         </Button>
 
         <Button block bordered danger iconLeft
-        onPress={this.logout.bind(this)}
-        style={button}
+          onPress={this.logout.bind(this)}
+          style={button}
         >
           <Icon name='alarm' />
           <Text>Logout</Text>

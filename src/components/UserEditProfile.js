@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { Icon, Container, Button, Content, Form, Item, Input, Label} from 'native-base';
 
-
 import {
   signupEmailChanged,
   signupNameChanged,
@@ -46,14 +45,12 @@ class UserEditProfile extends Component {
     const { email, name, city, position } = this.props;
     const usersRef = firebase.database().ref('/users');
     const userSave = firebase.auth().currentUser;
-
     usersRef.child(this.returnId()).set({
         email,
         name,
         city,
         position
       });
-
     userSave.updateEmail(email);
   }
 
@@ -75,8 +72,11 @@ class UserEditProfile extends Component {
     const { button } = styles;
 
     return (
-      <Button block bordered success iconLeft onPress={this.onSavePress.bind(this)}
-      disabled={this.props.error !== ''} style={button} >
+      <Button block bordered success iconLeft
+        onPress={this.onSavePress.bind(this)}
+        disabled={this.props.error !== ''}
+        style={button}
+      >
         <Icon name='person' />
         <Text>Save changes</Text>
       </Button>
@@ -86,8 +86,10 @@ class UserEditProfile extends Component {
   renderButtonDelete() {
     const { button, whiteText } = styles;
     return (
-      <Button block danger iconLeft onPress={this.onDeletePress.bind(this)}
-       style={button} >
+      <Button block danger iconLeft
+        onPress={this.onDeletePress.bind(this)}
+        style={button}
+      >
         <Icon name='person' />
         <Text style={whiteText} >Delete Account</Text>
       </Button>
@@ -110,7 +112,6 @@ class UserEditProfile extends Component {
 
   render() {
     const { errorTextStyle, container } = styles;
-
     return (
         <Container style={container}>
               <Content>

@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { Text, View, Picker } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon, Container, Button, Content, Form, Item, Input, Label} from 'native-base';
-
-
+import LocationModal from './LocationModal';
+import LocationButton from './LocationButton';
+import { Card, CardSection, Spinner } from './common';
 import {
   signupEmailChanged,
   signupNameChanged,
@@ -16,10 +17,6 @@ import {
   signupUser,
   signupShowModal
  } from '../actions';
-
-import LocationModal from './LocationModal';
-import LocationButton from './LocationButton';
-import { Card, CardSection, Spinner } from './common';
 
 class SignupForm extends Component {
 
@@ -94,10 +91,12 @@ class SignupForm extends Component {
       return <Spinner size="large" />;
     }
     const { button } = styles;
-
     return (
-      <Button block bordered success iconLeft onPress={this.onSignupPress}
-      disabled={this.props.error !== ''} style={button} >
+      <Button block bordered success iconLeft
+        onPress={this.onSignupPress}
+        disabled={this.props.error !== ''}
+        style={button}
+      >
         <Icon name='person' />
         <Text>Sign up!</Text>
       </Button>
@@ -106,7 +105,6 @@ class SignupForm extends Component {
 
   render() {
     const { signUpStyle, errorTextStyle, container, image } = styles;
-
     return (
       <Container style={container}>
       <LocationModal
