@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, Picker } from 'react-native';
+import { Text, View, Picker, ScrollView } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 
 import {
@@ -102,101 +103,122 @@ class SignupForm extends Component {
     );
   }
 
+  renderCancelButton() {
+    return (
+      <Button onPress={() => Actions.login({ type: 'reset' })}>
+        Cancel
+      </Button>
+    );
+  }
+
   render() {
-    const { errorTextStyle, container } = styles;
+    const { errorTextStyle, container, baseContainer } = styles;
 
     return (
-        <View style={container}>
-          <LocationModal
-            visible={this.props.showModal}
-            onLocationSuccess={this.onLocationSuccess}
-            onGeoLocationSuccess={this.onGeoLocationSuccess}
-          />
-          <Card>
-            <CardSection>
-              <Input
-                editable
-                label="Email"
-                placeholder="email@gmail.com"
-                onChangeText={this.onEmailChange}
-                value={this.props.email}
-              />
-            </CardSection>
-
-            <CardSection>
-              <Input
-                label="Name"
-                placeholder="Brian Lara"
-                onChangeText={this.onNameChange.bind(this)}
-                value={this.props.name}
-              />
-            </CardSection>
-
-            <CardSection>
-              <Input
-                secureTextEntry
-                editable
-                label="Password"
-                placeholder="password"
-                onChangeText={this.onPassword1Change}
-                value={this.props.password1}
-              />
-            </CardSection>
-
-            <CardSection>
-              <Input
-                secureTextEntry
-                editable
-                label="Confirm Password"
-                placeholder="password"
-                onChangeText={this.onPassword2Change}
-                value={this.props.password2}
-              />
-            </CardSection>
-
-            <LocationButton
-              onCancelPressed={this.onCancelPressed}
-              onGeoLocationSuccess={this.onGeoLocationSuccess}
+      <View style={baseContainer}>
+        <ScrollView>
+          <View style={container}>
+            <LocationModal
+              visible={this.props.showModal}
               onLocationSuccess={this.onLocationSuccess}
-              onManuallyEnterLocation={this.onManuallyEnterLocation}
-            >
+              onGeoLocationSuccess={this.onGeoLocationSuccess}
+            />
+            <Card>
               <CardSection>
-                  <Input
-                    label="Location"
-                    placeholder="Toronto"
-                    editable={false}
-                    value={this.props.city}
-                  />
+                <Input
+                  editable
+                  label="Email"
+                  placeholder="email@gmail.com"
+                  onChangeText={this.onEmailChange}
+                  value={this.props.email}
+                />
               </CardSection>
-            </LocationButton>
-            <CardSection style={{ flexDirection: 'row' }}>
-              <Text style={styles.pickerTextStyle}>Position</Text>
-              <Picker
-                style={{ flex: 1 }}
-                selectedValue={this.props.position}
-                onValueChange={this.onPositionChange}
+
+              <CardSection>
+                <Input
+                  label="Name"
+                  placeholder="Brian Lara"
+                  onChangeText={this.onNameChange.bind(this)}
+                  value={this.props.name}
+                />
+              </CardSection>
+
+              <CardSection>
+                <Input
+                  secureTextEntry
+                  editable
+                  label="Password"
+                  placeholder="password"
+                  onChangeText={this.onPassword1Change}
+                  value={this.props.password1}
+                />
+              </CardSection>
+
+              <CardSection>
+                <Input
+                  secureTextEntry
+                  editable
+                  label="Confirm Password"
+                  placeholder="password"
+                  onChangeText={this.onPassword2Change}
+                  value={this.props.password2}
+                />
+              </CardSection>
+
+              <LocationButton
+                onCancelPressed={this.onCancelPressed}
+                onGeoLocationSuccess={this.onGeoLocationSuccess}
+                onLocationSuccess={this.onLocationSuccess}
+                onManuallyEnterLocation={this.onManuallyEnterLocation}
               >
-                  <Picker.Item label="Batsman" value="batsman" />
-                  <Picker.Item label="Bowler" value="bowler" />
-                  <Picker.Item label="Wicket Keeper" value="wicketkeeper" />
-                  <Picker.Item label="All Rounder" value="allrounder" />
-              </Picker>
-            </CardSection>
+                <CardSection>
+                    <Input
+                      label="Location"
+                      placeholder="Toronto"
+                      editable={false}
+                      value={this.props.city}
+                    />
+                </CardSection>
+              </LocationButton>
+              <CardSection style={{ flexDirection: 'row' }}>
+                <Text style={styles.pickerTextStyle}>Position</Text>
+                <Picker
+                  style={{ flex: 1 }}
+                  selectedValue={this.props.position}
+                  onValueChange={this.onPositionChange}
+                >
+                    <Picker.Item label="Batsman" value="batsman" />
+                    <Picker.Item label="Bowler" value="bowler" />
+                    <Picker.Item label="Wicket Keeper" value="wicketkeeper" />
+                    <Picker.Item label="All Rounder" value="allrounder" />
+                </Picker>
+              </CardSection>
 
-            <Text style={errorTextStyle}>
-              {this.props.error}
-            </Text>
+              <Text style={errorTextStyle}>
+                {this.props.error}
+              </Text>
 
-            <CardSection>
-              {this.renderButton()}
-            </CardSection>
-          </Card>
-        </View>
+              <CardSection>
+                {this.renderButton()}
+              </CardSection>
+              <CardSection>
+                {this.renderCancelButton()}
+              </CardSection>
+            </Card>
+          </View>
+        </ScrollView>
+      </View>
     );
   }
 }
 
 const styles = {
+  baseContainer: {
+    marginTop: 63,
+    marginBottom: 20,
+    flex: 1,
+    justifyContent: 'center'
+  },
   container: {
     flex: 1,
     justifyContent: 'center'
