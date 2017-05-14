@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { Text, View, Picker, ScrollView } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
-
+import { Icon, Container, Button, Content, Form, Item, Input, Label } from 'native-base';
+import LocationModal from './LocationModal';
+import LocationButton from './LocationButton';
+import { CardSection, Spinner } from './common';
 import {
   signupEmailChanged,
   signupNameChanged,
@@ -15,10 +18,6 @@ import {
   signupUser,
   signupShowModal
  } from '../actions';
-
-import LocationModal from './LocationModal';
-import LocationButton from './LocationButton';
-import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class SignupForm extends Component {
 
@@ -92,122 +91,129 @@ class SignupForm extends Component {
     if (this.props.loading) {
       return <Spinner size="large" />;
     }
-
+    const { button } = styles;
     return (
       <Button
+        block success iconLeft
         onPress={this.onSignupPress}
         disabled={this.props.error !== ''}
+        style={button}
       >
-        Sign Up
+        <Icon name='person' />
+        <Text>Sign up!</Text>
       </Button>
     );
   }
 
   renderCancelButton() {
+    const { button } = styles;
     return (
-      <Button onPress={() => Actions.login({ type: 'reset' })}>
-        Cancel
+      <Button
+        block light iconLeft
+        onPress={() => Actions.login({ type: 'reset' })}
+        style={button}
+      >
+        <Icon name='person' />
+        <Text>Cancel</Text>
       </Button>
     );
   }
 
   render() {
     const { errorTextStyle, container, baseContainer } = styles;
-
     return (
       <View style={baseContainer}>
         <ScrollView>
-          <View style={container}>
-            <LocationModal
-              visible={this.props.showModal}
-              onLocationSuccess={this.onLocationSuccess}
-              onGeoLocationSuccess={this.onGeoLocationSuccess}
-            />
-            <Card>
-              <CardSection>
-                <Input
-                  editable
-                  label="Email"
-                  placeholder="email@gmail.com"
-                  onChangeText={this.onEmailChange}
-                  value={this.props.email}
-                />
-              </CardSection>
+          <Container style={container}>
+          <LocationModal
+            visible={this.props.showModal}
+            onLocationSuccess={this.onLocationSuccess}
+            onGeoLocationSuccess={this.onGeoLocationSuccess}
+          />
+                <Content>
+                    <Form>
+                        <Item fixedLabel>
+                            <Label>Email</Label>
+                            <Input
+                              editable
+                              label="Email"
+                              placeholder="email@gmail.com"
+                              onChangeText={this.onEmailChange}
+                              value={this.props.email}
+                            />
+                        </Item>
+                        <Item fixedLabel>
+                            <Label>Name</Label>
+                            <Input
+                              label="Name"
+                              placeholder="Brian Lara"
+                              onChangeText={this.onNameChange.bind(this)}
+                              value={this.props.name}
+                            />
+                        </Item>
+                        <Item fixedLabel>
+                            <Label>Password</Label>
+                            <Input
+                              secureTextEntry
+                              editable
+                              label="Password"
+                              placeholder="password"
+                              onChangeText={this.onPassword1Change}
+                              value={this.props.password1}
+                            />
+                        </Item>
+                        <Item fixedLabel>
+                            <Label>Confirm Password</Label>
+                            <Input
+                              secureTextEntry
+                              editable
+                              label="Confirm Password"
+                              placeholder="password"
+                              onChangeText={this.onPassword2Change}
+                              value={this.props.password2}
+                            />
+                        </Item>
 
-              <CardSection>
-                <Input
-                  label="Name"
-                  placeholder="Brian Lara"
-                  onChangeText={this.onNameChange.bind(this)}
-                  value={this.props.name}
-                />
-              </CardSection>
+                        <LocationButton
+                          onCancelPressed={this.onCancelPressed}
+                          onGeoLocationSuccess={this.onGeoLocationSuccess}
+                          onLocationSuccess={this.onLocationSuccess}
+                          onManuallyEnterLocation={this.onManuallyEnterLocation}
+                        >
+                          <Item fixedLabel>
+                            <Label>Location</Label>
+                            <Input
+                              label="Location"
+                              placeholder="Toronto"
+                              editable={false}
+                              value={this.props.city}
+                            />
+                          </Item>
+                        </LocationButton>
 
-              <CardSection>
-                <Input
-                  secureTextEntry
-                  editable
-                  label="Password"
-                  placeholder="password"
-                  onChangeText={this.onPassword1Change}
-                  value={this.props.password1}
-                />
-              </CardSection>
+                        <CardSection style={{ flexDirection: 'row' }}>
+                          <Picker
+                            style={{ flex: 1 }}
+                            selectedValue={this.props.position}
+                            onValueChange={this.onPositionChange}
+                          >
+                              <Picker.Item label="Batsman" value="batsman" />
+                              <Picker.Item label="Bowler" value="bowler" />
+                              <Picker.Item label="Wicket Keeper" value="wicketkeeper" />
+                              <Picker.Item label="All Rounder" value="allrounder" />
+                          </Picker>
+                        </CardSection>
 
-              <CardSection>
-                <Input
-                  secureTextEntry
-                  editable
-                  label="Confirm Password"
-                  placeholder="password"
-                  onChangeText={this.onPassword2Change}
-                  value={this.props.password2}
-                />
-              </CardSection>
-
-              <LocationButton
-                onCancelPressed={this.onCancelPressed}
-                onGeoLocationSuccess={this.onGeoLocationSuccess}
-                onLocationSuccess={this.onLocationSuccess}
-                onManuallyEnterLocation={this.onManuallyEnterLocation}
-              >
-                <CardSection>
-                    <Input
-                      label="Location"
-                      placeholder="Toronto"
-                      editable={false}
-                      value={this.props.city}
-                    />
-                </CardSection>
-              </LocationButton>
-              <CardSection style={{ flexDirection: 'row' }}>
-                <Text style={styles.pickerTextStyle}>Position</Text>
-                <Picker
-                  style={{ flex: 1 }}
-                  selectedValue={this.props.position}
-                  onValueChange={this.onPositionChange}
-                >
-                    <Picker.Item label="Batsman" value="batsman" />
-                    <Picker.Item label="Bowler" value="bowler" />
-                    <Picker.Item label="Wicket Keeper" value="wicketkeeper" />
-                    <Picker.Item label="All Rounder" value="allrounder" />
-                </Picker>
-              </CardSection>
-
-              <Text style={errorTextStyle}>
-                {this.props.error}
-              </Text>
-
-              <CardSection>
-                {this.renderButton()}
-              </CardSection>
-              <CardSection>
-                {this.renderCancelButton()}
-              </CardSection>
-            </Card>
-          </View>
-        </ScrollView>
-      </View>
+                        <Text style={errorTextStyle}>
+                          {this.props.error}
+                        </Text>
+                    </Form>
+                    {this.renderButton()}
+                    {this.renderCancelButton()}
+                </Content>
+            </Container>
+          </ScrollView>
+        </View>
     );
   }
 }
@@ -219,20 +225,28 @@ const styles = {
     flex: 1,
     justifyContent: 'center'
   },
+  button: {
+    marginTop: 10,
+    marginLeft: 10,
+    marginRight: 10
+  },
   container: {
     flex: 1,
-    justifyContent: 'center'
-  },
-  pickerTextStyle: {
-    fontSize: 18,
-    paddingLeft: 20,
-    alignSelf: 'center',
-    flex: 1
+    justifyContent: 'center',
   },
   errorTextStyle: {
     fontSize: 20,
     alignSelf: 'center',
     color: 'red'
+  },
+  signUpStyle: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: '#099b3e',
+    marginTop: 50,
+    marginBottom: 30,
+    fontWeight: 'bold',
+    alignSelf: 'center'
   }
 };
 

@@ -10,7 +10,7 @@ class MatchList extends Component {
         <View>
           <CardSection>
             <Text style={styles.titleStyle}>
-            Match List
+              Match List
             </Text>
           </CardSection>
         </View>

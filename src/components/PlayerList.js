@@ -2,11 +2,12 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { ListView, View } from 'react-native';
 import { connect } from 'react-redux';
+import { Text, Icon, Button } from 'native-base';
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
 import { playerFetch } from '../actions/SignupActions';
 import PlayerItem from './PlayerItem.js';
-import { Button, Card, CardSection } from './common';
+
 
 class PlayerList extends Component {
 
@@ -45,6 +46,8 @@ class PlayerList extends Component {
 }
 
   render() {
+    const { button } = styles;
+
     return (
       <View>
         <ListView
@@ -53,22 +56,24 @@ class PlayerList extends Component {
           dataSource={this.dataSource}
           renderRow={this.renderRow}
         />
-        <Card>
-         <CardSection>
-           <Button onPress={this.logout.bind(this)}>
-             Logout
-           </Button>
-         </CardSection>
-       </Card>
 
-       <Card>
-        <CardSection>
-          <Button onPress={this.userProfile.bind(this)}>
-            Your profile
-          </Button>
-        </CardSection>
-      </Card>
+        <Button
+          block bordered success iconLeft
+          onPress={this.userProfile.bind(this)}
+          style={button}
+        >
+          <Icon name='person' />
+          <Text>User profile</Text>
+        </Button>
 
+        <Button
+          block bordered danger iconLeft
+          onPress={this.logout.bind(this)}
+          style={button}
+        >
+          <Icon name='alarm' />
+          <Text>Logout</Text>
+        </Button>
 
      </View>
     );
@@ -78,6 +83,9 @@ class PlayerList extends Component {
 const styles = {
   container: {
     marginTop: 20
+  },
+  button: {
+    margin: 10,
   }
 };
 

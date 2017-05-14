@@ -1,10 +1,9 @@
 import firebase from 'firebase';
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Picker, Modal } from 'react-native';
+import { Text, Picker } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-
-
+import { Icon, Container, Button, Content, Form, Item, Input, Label } from 'native-base';
 import {
   signupEmailChanged,
   signupNameChanged,
@@ -12,7 +11,7 @@ import {
   signupPositionChanged
  } from '../actions';
 
-import { Card, CardSection, Input, Button, Spinner, Confirm } from './common';
+import { CardSection, Spinner, Confirm } from './common';
 
 class UserEditProfile extends Component {
   state = { showModal: false };
@@ -45,14 +44,12 @@ class UserEditProfile extends Component {
     const { email, name, city, position } = this.props;
     const usersRef = firebase.database().ref('/users');
     const userSave = firebase.auth().currentUser;
-
     usersRef.child(this.returnId()).set({
         email,
         name,
         city,
         position
       });
-
     userSave.updateEmail(email);
   }
 
@@ -60,37 +57,6 @@ class UserEditProfile extends Component {
     this.setState({ showModal: true });
   }
 
-  returnId() {
-    const { currentUser } = firebase.auth();
-    const id = currentUser.uid;
-    return id;
-  }
-
-
-  renderButton() {
-    if (this.props.loading) {
-      return <Spinner size="large" />;
-    }
-
-    return (
-      <Button onPress={this.onSavePress.bind(this)} >
-        Save changes
-      </Button>
-    );
-  }
-
-  renderButtonDelete() {
-    if (this.props.loading) {
-      return <Spinner size="large" />;
-    }
-    const { buttonStyle } = styles;
-
-    return (
-      <Button onPress={this.onDeletePress.bind(this)} style={buttonStyle} >
-        Delete Account
-      </Button>
-    );
-  }
   onAccept() {
     firebase.database().ref('/users').off();
     const usersRef = firebase.database().ref('/users');
@@ -106,83 +72,124 @@ class UserEditProfile extends Component {
     this.setState({ showModal: false });
   }
 
-  render() {
-    const { errorTextStyle, container } = styles;
+  returnId() {
+    const { currentUser } = firebase.auth();
+    const id = currentUser.uid;
+    return id;
+  }
+
+
+  renderButton() {
+    if (this.props.loading) {
+      return <Spinner size="large" />;
+    }
+    const { button } = styles;
 
     return (
-        <View style={container}>
-          <Card>
-            <CardSection>
-              <Input
-                label="Email"
-                placeholder={this.props.usersObject[this.returnId()].email}
-                onChangeText={this.onEmailChange.bind(this)}
-                value={this.props.email}
-              />
-            </CardSection>
+      <Button
+        block bordered success iconLeft
+        onPress={this.onSavePress.bind(this)}
+        disabled={this.props.error !== ''}
+        style={button}
+      >
+        <Icon name='person' />
+        <Text>Save changes</Text>
+      </Button>
+    );
+  }
 
-            <CardSection>
-              <Input
-                label="Name"
-                placeholder={this.props.usersObject[this.returnId()].name}
-                onChangeText={this.onNameChange.bind(this)}
-                value={this.props.name}
-              />
-            </CardSection>
+  renderButtonDelete() {
+    const { button, whiteText } = styles;
+    return (
+      <Button
+        block danger iconLeft
+        onPress={this.onDeletePress.bind(this)}
+        style={button}
+      >
+        <Icon name='person' />
+        <Text style={whiteText} >Delete Account</Text>
+      </Button>
+    );
+  }
 
-            <CardSection>
-              <Input
-                label="City"
-                placeholder={this.props.usersObject[this.returnId()].city}
-                onChangeText={this.onCityChange.bind(this)}
-                value={this.props.city}
-              />
-            </CardSection>
+  render() {
+    const { errorTextStyle, container } = styles;
+    return (
+        <Container style={container}>
+              <Content>
+                  <Form>
+                      <Item fixedLabel>
+                          <Label>Email</Label>
+                          <Input
+                            editable
+                            label="Email"
+                            placeholder={this.props.usersObject[this.returnId()].email}
+                            onChangeText={this.onEmailChange.bind(this)}
+                            value={this.props.email}
+                          />
+                      </Item>
+                      <Item fixedLabel>
+                          <Label>Name</Label>
+                          <Input
+                            label="Name"
+                            placeholder={this.props.usersObject[this.returnId()].name}
+                            onChangeText={this.onNameChange.bind(this)}
+                            value={this.props.name}
+                          />
+                      </Item>
 
-            <CardSection style={{ flexDirection: 'row' }}>
-              <Text style={styles.pickerTextStyle}>Position</Text>
-              <Picker
-                style={{ flex: 1 }}
-                selectedValue={this.props.position}
-                onValueChange={this.onPositionChange.bind(this)}
-              >
-                  <Picker.Item label="Batsman" value="batsman" />
-                  <Picker.Item label="Bowler" value="bowler" />
-                  <Picker.Item label="Wicket Keeper" value="wicketkeeper" />
-                  <Picker.Item label="All Rounder" value="allrounder" />
-              </Picker>
-            </CardSection>
+                        <Item fixedLabel>
+                            <Label>City</Label>
+                            <Input
+                              label="City"
+                              placeholder={this.props.usersObject[this.returnId()].city}
+                              onChangeText={this.onCityChange.bind(this)}
+                              value={this.props.city}
+                            />
+                        </Item>
 
-            <Text style={errorTextStyle}>
-              {this.props.error}
-            </Text>
+                      <CardSection style={{ flexDirection: 'row' }}>
+                        <Picker
+                          style={{ flex: 1 }}
+                          selectedValue={this.props.position}
+                          onValueChange={this.onPositionChange}
+                        >
+                            <Picker.Item label="Batsman" value="batsman" />
+                            <Picker.Item label="Bowler" value="bowler" />
+                            <Picker.Item label="Wicket Keeper" value="wicketkeeper" />
+                            <Picker.Item label="All Rounder" value="allrounder" />
+                        </Picker>
+                      </CardSection>
 
-            <CardSection>
-              {this.renderButton()}
-            </CardSection>
+                      <Text style={errorTextStyle}>
+                        {this.props.error}
+                      </Text>
+                  </Form>
 
-            <CardSection>
-              {this.renderButtonDelete()}
-            </CardSection>
+                    {this.renderButton()}
+                    {this.renderButtonDelete()}
 
-            <Confirm
-             visible={this.state.showModal}
-             onAccept={this.onAccept.bind(this)}
-             onDecline={this.onDecline.bind(this)}
-            >
-              Are you sure you want to delete your account?
-            </Confirm>
-          </Card>
-
-        </View>
+                  <Confirm
+                   visible={this.state.showModal}
+                   onAccept={this.onAccept.bind(this)}
+                   onDecline={this.onDecline.bind(this)}
+                  >
+                    Are you sure you want to delete your account?
+                  </Confirm>
+              </Content>
+          </Container>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
+  button: {
+    margin: 10
+  },
   container: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginTop: 80
   },
   pickerTextStyle: {
     fontSize: 18,
@@ -194,8 +201,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: 'center',
     color: 'red'
+  },
+  whiteText: {
+    color: 'white'
   }
-});
+};
 
 const mapStateToProps = ({ signup, users }) => {
   const { email, name, city, position, error, loading } = signup;
