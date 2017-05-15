@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Text, View, Picker, ScrollView } from 'react-native';
-import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { Icon, Container, Button, Content, Form, Item, Input, Label } from 'native-base';
 import LocationModal from './LocationModal';
@@ -38,16 +37,22 @@ class SignupForm extends Component {
     this.onGeoLocationSuccess = this.onGeoLocationSuccess.bind(this);
     this.onLocationSuccess = this.onLocationSuccess.bind(this);
     this.onCancelPressed = this.onCancelPressed.bind(this);
+
+    this.onModalCancel = this.onModalCancel.bind(this);
   }
 
   onGeoLocationSuccess(geolocation) {
-    this.props.signupShowModal(false);
+    this.onModalCancel();
     this.props.signupGeoLocationChanged(geolocation);
   }
 
   onLocationSuccess(location) {
-    this.props.signupShowModal(false);
+    this.onModalCancel();
     this.props.signupCityChanged(location);
+  }
+
+  onModalCancel() {
+    this.props.signupShowModal(false);
   }
 
   onCancelPressed() {
@@ -87,6 +92,27 @@ class SignupForm extends Component {
     this.props.signupUser({ name, email, password: password1, position, location, city });
   }
 
+  renderLocationItem() {
+    if (this.props.location !== null) {
+      return (
+        <Input
+          label="Location"
+          placeholder="Toronto"
+          editable={false}
+          value={this.props.city}
+        />
+      );
+    }
+    return (
+      <LocationButton
+      onCancelPressed={this.onCancelPressed}
+      onGeoLocationSuccess={this.onGeoLocationSuccess}
+      onLocationSuccess={this.onLocationSuccess}
+      onManuallyEnterLocation={this.onManuallyEnterLocation}
+      />
+    );
+  }
+
   renderButton() {
     if (this.props.loading) {
       return <Spinner size="large" />;
@@ -105,20 +131,6 @@ class SignupForm extends Component {
     );
   }
 
-  renderCancelButton() {
-    const { button } = styles;
-    return (
-      <Button
-        block light iconLeft
-        onPress={() => Actions.login({ type: 'reset' })}
-        style={button}
-      >
-        <Icon name='person' />
-        <Text>Cancel</Text>
-      </Button>
-    );
-  }
-
   render() {
     const { errorTextStyle, container, baseContainer } = styles;
     return (
@@ -129,6 +141,7 @@ class SignupForm extends Component {
             visible={this.props.showModal}
             onLocationSuccess={this.onLocationSuccess}
             onGeoLocationSuccess={this.onGeoLocationSuccess}
+            onModalCancel={this.onModalCancel}
           />
                 <Content>
                     <Form>
@@ -136,6 +149,9 @@ class SignupForm extends Component {
                             <Label>Email</Label>
                             <Input
                               editable
+                              autoFocus
+                              autoCapitalize='none'
+                              keyboardType='email-address'
                               label="Email"
                               placeholder="email@gmail.com"
                               onChangeText={this.onEmailChange}
@@ -173,23 +189,10 @@ class SignupForm extends Component {
                               value={this.props.password2}
                             />
                         </Item>
-
-                        <LocationButton
-                          onCancelPressed={this.onCancelPressed}
-                          onGeoLocationSuccess={this.onGeoLocationSuccess}
-                          onLocationSuccess={this.onLocationSuccess}
-                          onManuallyEnterLocation={this.onManuallyEnterLocation}
-                        >
-                          <Item fixedLabel>
-                            <Label>Location</Label>
-                            <Input
-                              label="Location"
-                              placeholder="Toronto"
-                              editable={false}
-                              value={this.props.city}
-                            />
-                          </Item>
-                        </LocationButton>
+                        <Item fixedLabel>
+                          <Label>Location</Label>
+                          {this.renderLocationItem()}
+                        </Item>
 
                         <CardSection style={{ flexDirection: 'row' }}>
                           <Picker
@@ -204,12 +207,13 @@ class SignupForm extends Component {
                           </Picker>
                         </CardSection>
 
-                        <Text style={errorTextStyle}>
-                          {this.props.error}
-                        </Text>
+                        <CardSection style={{ justifyContent: 'center' }}>
+                          <Text style={errorTextStyle}>
+                            {this.props.error}
+                          </Text>
+                        </CardSection>
                     </Form>
                     {this.renderButton()}
-                    {this.renderCancelButton()}
                 </Content>
             </Container>
           </ScrollView>
@@ -221,14 +225,11 @@ class SignupForm extends Component {
 const styles = {
   baseContainer: {
     marginTop: 63,
-    marginBottom: 20,
     flex: 1,
     justifyContent: 'center'
   },
   button: {
-    marginTop: 10,
-    marginLeft: 10,
-    marginRight: 10
+    margin: 10
   },
   container: {
     flex: 1,

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, Alert } from 'react-native';
+import { Button, Text } from 'native-base';
 import GeocodingUtil from '../utils/GeocodingUtil';
 
 /**
@@ -114,8 +115,14 @@ class LocationButton extends Component {
   */
   render() {
     return (
-      <TouchableOpacity onPress={this.onPressButton}>
-          { this.props.children }
+      <TouchableOpacity>
+        <Button
+          onPress={this.onPressButton}
+          block primary iconLeft
+          style={{ margin: 2, marginRight: 5 }}
+        >
+          <Text>Set</Text>
+        </Button>
       </TouchableOpacity>
     );
   }
