@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
+import { Icon, Container, Button, Item, Input, Header, Text } from 'native-base';
 import {
   View,
   Modal,
   ListView,
-  Text,
-  TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  Platform
 } from 'react-native';
-import { Card, CardSection, Button, Spinner } from './common';
+import { CardSection, Spinner } from './common';
 import GeocodingUtil from '../utils/GeocodingUtil';
 
 /**
@@ -29,6 +29,8 @@ import GeocodingUtil from '../utils/GeocodingUtil';
 
   onLocationSuccess - Callback function if a city is successfully retrieved
   using google api based on the geolocation
+
+  onModalCancel - Callback function when cancel button is hit.
 */
 class LocationModal extends Component {
 
@@ -42,6 +44,7 @@ class LocationModal extends Component {
     this.onLocationSuccess = this.onLocationSuccess.bind(this);
     this.onGeoLocationSuccess = this.onGeoLocationSuccess.bind(this);
     this.renderRow = this.renderRow.bind(this);
+    this.onModalCancel = this.onModalCancel.bind(this);
   }
 
   /**
@@ -68,6 +71,13 @@ class LocationModal extends Component {
   */
   onGeoLocationSuccess(location) {
     return this.props.onGeoLocationSuccess(location);
+  }
+
+  /**
+    This is called when the 'Cancel button is pressed'
+  */
+  onModalCancel() {
+    this.props.onModalCancel();
   }
 
   createDataSource(results) {
@@ -104,13 +114,54 @@ class LocationModal extends Component {
   /**
     Renders search button or spinner depending on the 'loading' state
   */
-  renderButton() {
+  renderSearchButton() {
+    if (Platform.OS === 'ios') {
+      return (
+        <Button
+          transparent
+          disabled={this.state.loading}
+          onPress={this.lookupAddress}
+        >
+          <Text>Search</Text>
+        </Button>
+      );
+    }
+    return (
+      <Button
+        transparent
+        disabled={this.state.loading}
+        onPress={this.lookupAddress}
+        style={styles.androidSearchBtn}
+      >
+        <Text>Search</Text>
+      </Button>
+    );
+  }
+
+  renderListView() {
+    const { listView } = styles;
     if (this.state.loading) {
       return <Spinner size="large" />;
     }
     return (
-      <Button onPress={this.lookupAddress} >
-        Search
+      <ListView
+        style={listView}
+        enableEmptySections
+        dataSource={this.dataSource}
+        renderRow={this.renderRow}
+      />
+    );
+  }
+
+  renderCancelButton() {
+    return (
+      <Button
+        onPress={this.onModalCancel}
+        block light iconLeft
+        style={{ margin: 10 }}
+      >
+        <Icon name='person' />
+        <Text>Cancel</Text>
       </Button>
     );
   }
@@ -131,42 +182,39 @@ class LocationModal extends Component {
   }
 
   render() {
-    const { modal, inputStyle, containerStyle, listView } = styles;
+    const { modal, inputStyle } = styles;
 
     return (
       <Modal
-        animationType={'slide'}
+        animationType='slide'
         onRequestClose={() => {}}
         transparent
         visible={this.props.visible}
       >
-        <View style={modal}>
-          <Card>
-            <CardSection>
-              <View style={containerStyle}>
-                <TextInput
-                  autoFocus
-                  autoCapitalize={'none'}
-                  editable
-                  placeholder={'123 Yonge St, ON, Canada'}
-                  autoCorrect={false}
-                  style={inputStyle}
-                  onChangeText={(text) => this.setState({ search: text })}
-                  value={this.state.search}
-                />
-              </View>
-            </CardSection>
-            <CardSection>
-              {this.renderButton()}
-            </CardSection>
-            <ListView
-              style={listView}
-              enableEmptySections
-              dataSource={this.dataSource}
-              renderRow={this.renderRow}
-            />
-          </Card>
-        </View>
+        <Container style={modal}>
+          <Header
+            searchBar
+            rounded
+          >
+            <Item>
+              <Icon name="search" />
+              <Input
+                autoFocus
+                autoCapitalize={'none'}
+                editable
+                placeholder={'313 Yonge St, ON'}
+                autoCorrect={false}
+                style={inputStyle}
+                onChangeText={(text) => this.setState({ search: text })}
+                value={this.state.search}
+              />
+              <Icon name="ios-people" />
+            </Item>
+            {this.renderSearchButton()}
+          </Header>
+          {this.renderListView()}
+          {this.renderCancelButton()}
+        </Container>
       </Modal>
     );
   }
@@ -241,6 +289,11 @@ const styles = {
   rowStyle: {
     fontSize: 18,
     paddingLeft: 15
+  },
+  androidSearchBtn: {
+    width: 50,
+    height: 50,
+    marginLeft: 10
   }
 };
 

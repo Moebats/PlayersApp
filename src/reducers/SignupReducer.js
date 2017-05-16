@@ -18,7 +18,7 @@ const INITIAL_STATE = {
   name: '',
   password1: '',
   password2: '',
-  position: 'batsman',
+  position: 'bowler',
   user: null,
   location: null,
   city: '',
