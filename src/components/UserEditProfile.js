@@ -88,13 +88,14 @@ class UserEditProfile extends Component {
   }
 
   onSavePress() {
-    const { email, name, city, position, location } = this.props;
+    const { email, name, city, position, location, region } = this.props;
     const usersRef = firebase.database().ref('/users');
     const userSave = firebase.auth().currentUser;
     usersRef.child(this.returnId()).set({
         name,
         city,
         location,
+        region,
         position
       });
     userSave.updateEmail(email);
@@ -243,7 +244,7 @@ class UserEditProfile extends Component {
                       </CardSection>
 
 
-                    <CardSection style={{ justifyContent: 'center' }}>
+                    <CardSection style={{ justifyContent: 'center', marginBottom: 15 }}>
                       <Text style={errorTextStyle}>
                         {this.props.error}
                       </Text>
@@ -298,12 +299,22 @@ const styles = {
   }
 };
 
-const mapStateToProps = ({ signup, users }) => {
-  const { email, name, city, position, error, location, loading, showModal, placeholder } = signup;
-  const usersObject = users;
+const mapStateToProps = ({ signup }) => {
+  const {
+    email, name, city, position, error, location, loading, showModal, placeholder, region
+  } = signup;
 
   return {
-    usersObject, email, name, city, position, error, loading, location, showModal, placeholder
+    email,
+    name,
+    city,
+    position,
+    error,
+    loading,
+    location,
+    showModal,
+    placeholder,
+    region
   };
 };
 

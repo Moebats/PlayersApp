@@ -93,7 +93,7 @@ export const signupShowModal = (text) => {
 
 //Add other user sign up feild actions below
 
-export const signupUser = ({ email, name, location, city, password, position }) => {
+export const signupUser = ({ email, name, location, city, password, position, region }) => {
   return (dispatch) => {
     dispatch({ type: SIGNUP_USER });
 
@@ -110,6 +110,7 @@ export const signupUser = ({ email, name, location, city, password, position }) 
              name,
              location,
              city,
+             region,
              position
            });
       })

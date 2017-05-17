@@ -23,6 +23,7 @@ const INITIAL_STATE = {
   user: null,
   location: null,
   city: '',
+  region: '',
   error: '',
   loading: false,
   showModal: false,
@@ -100,7 +101,8 @@ const SignupReducer = (state = INITIAL_STATE, action) => {
         break;
       }
       case SIGNUP_CITY_CHANGED: {
-        newStateObj = { ...state, city: action.payload };
+        const { city, country } = action.payload;
+        newStateObj = { ...state, city, region: `${action.payload.state}, ${country}` };
         break;
       }
       case SIGNUP_SHOW_MODAL: {
