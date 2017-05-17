@@ -132,7 +132,7 @@ const SignupReducer = (state = INITIAL_STATE, action) => {
           //fill passwords to same value for validation purposes on edit player form
           password1: 'qwqwqw',
           password2: 'qwqwqw',
-          init: { email: userData.email, name: userData.name, city: userData.city }
+          placeholder: { email: userData.email, name: userData.name, city: userData.city }
         };
         break;
       }

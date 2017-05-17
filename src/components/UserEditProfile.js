@@ -131,7 +131,7 @@ class UserEditProfile extends Component {
         <View style={{ flexDirection: 'row', width: '67%' }}>
           <Input
             label="Location"
-            placeholder={this.props.init.city}
+            placeholder={this.props.placeholder.city}
             editable={false}
             value={this.props.city}
           />
@@ -208,7 +208,7 @@ class UserEditProfile extends Component {
                             autoCapitalize='none'
                             keyboardType='email-address'
                             label="Email"
-                            placeholder={this.props.init.email}
+                            placeholder={this.props.placeholder.email}
                             onChangeText={this.onEmailChange.bind(this)}
                             value={this.props.email}
                           />
@@ -217,7 +217,7 @@ class UserEditProfile extends Component {
                           <Label>Name</Label>
                           <Input
                             label="Name"
-                            placeholder={this.props.init.name}
+                            placeholder={this.props.placeholder.name}
                             onChangeText={this.onNameChange.bind(this)}
                             value={this.props.name}
                           />
@@ -299,10 +299,12 @@ const styles = {
 };
 
 const mapStateToProps = ({ signup, users }) => {
-  const { email, name, city, position, error, location, loading, showModal, init } = signup;
+  const { email, name, city, position, error, location, loading, showModal, placeholder } = signup;
   const usersObject = users;
 
-  return { usersObject, email, name, city, position, error, loading, location, showModal, init };
+  return {
+    usersObject, email, name, city, position, error, loading, location, showModal, placeholder
+  };
 };
 
 export default connect(mapStateToProps,

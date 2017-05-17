@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text } from 'react-native';
+import { Text, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon, Container, Button, Content, Form, Item, Input, Label } from 'native-base';
 import { emailChanged, passwordChanged, loginUser, signupClicked } from '../actions';
@@ -45,7 +45,7 @@ class LoginForm extends Component {
   }
 
   render() {
-    const { signUpStyle, errorTextStyle, container } = styles;
+    const { signUpStyle, errorTextStyle, container, logo } = styles;
 
     return (
               <Container style={container}>
@@ -53,7 +53,10 @@ class LoginForm extends Component {
                         <Text style={signUpStyle}>
                           Welcome to Cricket Players App
                         </Text>
-
+                        <Image
+                          style={logo}
+                          source={require('../images/batsman.png')}
+                        />
                         <Form>
                             <Item fixedLabel>
                                 <Label>Email</Label>
@@ -94,6 +97,13 @@ class LoginForm extends Component {
 const styles = {
   button: {
     margin: 10,
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    margin: 25
   },
   container: {
     flex: 1,
