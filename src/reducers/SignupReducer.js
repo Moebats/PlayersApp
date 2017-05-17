@@ -26,7 +26,7 @@ const INITIAL_STATE = {
   error: '',
   loading: false,
   showModal: false,
-  init: { email: '', name: '', city: '' }
+  placeholder: { email: '', name: '', city: '' }
 };
 
 const EmailValidator = require('email-validator');
