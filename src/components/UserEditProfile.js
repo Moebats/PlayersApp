@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import React, { Component } from 'react';
-import { Text, Picker } from 'react-native';
+import { Text, Picker, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { Icon, Container, Button, Content, Form, Item, Input, Label } from 'native-base';
@@ -8,19 +8,66 @@ import {
   signupEmailChanged,
   signupNameChanged,
   signupCityChanged,
-  signupPositionChanged
+  signupGeoLocationChanged,
+  signupPositionChanged,
+  signupShowModal,
+  userDataFetchSuccess
  } from '../actions';
-
+ import LocationModal from './LocationModal';
+ import LocationButton from './LocationButton';
 import { CardSection, Spinner, Confirm } from './common';
 
 class UserEditProfile extends Component {
-  state = { showModal: false };
+
+  /**
+    Constructor used to bind the methods with this component. Apparently
+    this is best practice for binding for ES6.
+  */
+  constructor(props) {
+    super(props);
+
+    //LocationButton method binds
+    this.onManuallyEnterLocation = this.onManuallyEnterLocation.bind(this);
+    this.onGeoLocationSuccess = this.onGeoLocationSuccess.bind(this);
+    this.onLocationSuccess = this.onLocationSuccess.bind(this);
+    this.onCancelPressed = this.onCancelPressed.bind(this);
+
+    //LocationModal binds
+    this.onModalCancel = this.onModalCancel.bind(this);
+  }
+
+  state = { showDeleteConfirmModal: false };
 
   componentWillMount() {
     const { currentUser } = firebase.auth();
     const id = currentUser.uid;
-    console.log(id);
-    console.log(this.props.usersObject[id]);
+    const userData = firebase.database().ref(`/users/${id}`);
+    userData.once('value', snapshot => {
+      this.props.userDataFetchSuccess({ ...snapshot.val(), email: currentUser.email });
+    },
+    () => console.log('Error occurred during data fetch'));
+  }
+
+  onGeoLocationSuccess(geolocation) {
+    this.onModalCancel();
+    this.props.signupGeoLocationChanged(geolocation);
+  }
+
+  onLocationSuccess(location) {
+    this.onModalCancel();
+    this.props.signupCityChanged(location);
+  }
+
+  onModalCancel() {
+    this.props.signupShowModal(false);
+  }
+
+  onCancelPressed() {
+    // Do nothing and return to the form
+  }
+
+  onManuallyEnterLocation() {
+    this.props.signupShowModal(true);
   }
 
   //calling action creators
@@ -41,20 +88,20 @@ class UserEditProfile extends Component {
   }
 
   onSavePress() {
-    const { email, name, city, position } = this.props;
+    const { email, name, city, position, location } = this.props;
     const usersRef = firebase.database().ref('/users');
     const userSave = firebase.auth().currentUser;
     usersRef.child(this.returnId()).set({
-        email,
         name,
         city,
+        location,
         position
       });
     userSave.updateEmail(email);
   }
 
   onDeletePress() {
-    this.setState({ showModal: true });
+    this.setState({ showDeleteConfirmModal: true });
   }
 
   onAccept() {
@@ -69,7 +116,7 @@ class UserEditProfile extends Component {
   }
 
   onDecline() {
-    this.setState({ showModal: false });
+    this.setState({ showDeleteConfirmModal: false });
   }
 
   returnId() {
@@ -78,6 +125,34 @@ class UserEditProfile extends Component {
     return id;
   }
 
+  renderLocationItem() {
+    if (this.props.location !== null) {
+      return (
+        <View style={{ flexDirection: 'row', width: '67%' }}>
+          <Input
+            label="Location"
+            placeholder={this.props.init.city}
+            editable={false}
+            value={this.props.city}
+          />
+          <LocationButton
+          onCancelPressed={this.onCancelPressed}
+          onGeoLocationSuccess={this.onGeoLocationSuccess}
+          onLocationSuccess={this.onLocationSuccess}
+          onManuallyEnterLocation={this.onManuallyEnterLocation}
+          />
+        </View>
+      );
+    }
+    return (
+      <LocationButton
+      onCancelPressed={this.onCancelPressed}
+      onGeoLocationSuccess={this.onGeoLocationSuccess}
+      onLocationSuccess={this.onLocationSuccess}
+      onManuallyEnterLocation={this.onManuallyEnterLocation}
+      />
+    );
+  }
 
   renderButton() {
     if (this.props.loading) {
@@ -87,7 +162,7 @@ class UserEditProfile extends Component {
 
     return (
       <Button
-        block bordered success iconLeft
+        block success iconLeft
         onPress={this.onSavePress.bind(this)}
         disabled={this.props.error !== ''}
         style={button}
@@ -113,17 +188,27 @@ class UserEditProfile extends Component {
   }
 
   render() {
-    const { errorTextStyle, container } = styles;
+    const { errorTextStyle, container, baseContainer } = styles;
     return (
-        <Container style={container}>
+      <View style={baseContainer}>
+        <ScrollView>
+          <Container style={container}>
+          <LocationModal
+            visible={this.props.showModal}
+            onLocationSuccess={this.onLocationSuccess}
+            onGeoLocationSuccess={this.onGeoLocationSuccess}
+            onModalCancel={this.onModalCancel}
+          />
               <Content>
                   <Form>
                       <Item fixedLabel>
                           <Label>Email</Label>
                           <Input
                             editable
+                            autoCapitalize='none'
+                            keyboardType='email-address'
                             label="Email"
-                            placeholder={this.props.usersObject[this.returnId()].email}
+                            placeholder={this.props.init.email}
                             onChangeText={this.onEmailChange.bind(this)}
                             value={this.props.email}
                           />
@@ -132,27 +217,23 @@ class UserEditProfile extends Component {
                           <Label>Name</Label>
                           <Input
                             label="Name"
-                            placeholder={this.props.usersObject[this.returnId()].name}
+                            placeholder={this.props.init.name}
                             onChangeText={this.onNameChange.bind(this)}
                             value={this.props.name}
                           />
                       </Item>
 
-                        <Item fixedLabel>
-                            <Label>City</Label>
-                            <Input
-                              label="City"
-                              placeholder={this.props.usersObject[this.returnId()].city}
-                              onChangeText={this.onCityChange.bind(this)}
-                              value={this.props.city}
-                            />
-                        </Item>
+                      <Item fixedLabel>
+                        <Label>Location</Label>
+                        {this.renderLocationItem()}
+                      </Item>
+
 
                       <CardSection style={{ flexDirection: 'row' }}>
                         <Picker
                           style={{ flex: 1 }}
                           selectedValue={this.props.position}
-                          onValueChange={this.onPositionChange}
+                          onValueChange={this.onPositionChange.bind(this)}
                         >
                             <Picker.Item label="Batsman" value="batsman" />
                             <Picker.Item label="Bowler" value="bowler" />
@@ -161,35 +242,45 @@ class UserEditProfile extends Component {
                         </Picker>
                       </CardSection>
 
+
+                    <CardSection style={{ justifyContent: 'center' }}>
                       <Text style={errorTextStyle}>
                         {this.props.error}
                       </Text>
+                    </CardSection>
                   </Form>
 
                     {this.renderButton()}
                     {this.renderButtonDelete()}
 
                   <Confirm
-                   visible={this.state.showModal}
+                   visible={this.state.showDeleteConfirmModal}
                    onAccept={this.onAccept.bind(this)}
                    onDecline={this.onDecline.bind(this)}
                   >
                     Are you sure you want to delete your account?
                   </Confirm>
               </Content>
-          </Container>
+            </Container>
+          </ScrollView>
+        </View>
     );
   }
 }
 
 const styles = {
   button: {
-    margin: 10
+    margin: 10,
+    marginBottom: 5
+  },
+  baseContainer: {
+    marginTop: 63,
+    flex: 1,
+    justifyContent: 'center'
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    marginTop: 80
+    justifyContent: 'center'
   },
   pickerTextStyle: {
     fontSize: 18,
@@ -208,10 +299,10 @@ const styles = {
 };
 
 const mapStateToProps = ({ signup, users }) => {
-  const { email, name, city, position, error, loading } = signup;
+  const { email, name, city, position, error, location, loading, showModal, init } = signup;
   const usersObject = users;
 
-  return { usersObject, email, name, city, position, error, loading };
+  return { usersObject, email, name, city, position, error, loading, location, showModal, init };
 };
 
 export default connect(mapStateToProps,
@@ -219,5 +310,8 @@ export default connect(mapStateToProps,
     signupEmailChanged,
     signupNameChanged,
     signupCityChanged,
-    signupPositionChanged
+    signupPositionChanged,
+    signupGeoLocationChanged,
+    signupShowModal,
+    userDataFetchSuccess
 })(UserEditProfile);

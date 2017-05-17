@@ -10,7 +10,8 @@ import {
   SIGNUP_USER,
   SIGNUP_USER_FAIL,
   SIGNUP_USER_SUCCESS,
-  SIGNUP_SHOW_MODAL
+  SIGNUP_SHOW_MODAL,
+  USER_DATA_FETCH_SUCCESS
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -24,7 +25,8 @@ const INITIAL_STATE = {
   city: '',
   error: '',
   loading: false,
-  showModal: false
+  showModal: false,
+  init: { email: '', name: '', city: '' }
 };
 
 const EmailValidator = require('email-validator');
@@ -39,6 +41,11 @@ const validate = (state) => {
     return { ...state, error: 'Email is empty' };
   } else if (!EmailValidator.validate(state.email)) {
     return { ...state, error: 'Email format incorrect' };
+  }
+
+  //validate name
+  if (state.name.length === 0) {
+    return { ...state, error: 'Name is empty' };
   }
 
   //validate password equality
@@ -110,6 +117,24 @@ const SignupReducer = (state = INITIAL_STATE, action) => {
       }
       case SIGNUP_USER_SUCCESS: {
         return { ...state, ...INITIAL_STATE, user: action.payload };
+      }
+      case USER_DATA_FETCH_SUCCESS: {
+        const userData = action.payload;
+        newStateObj = {
+          ...state,
+          ...INITIAL_STATE,
+          email: userData.email,
+          name: userData.name,
+          user: userData,
+          city: userData.city,
+          location: userData.location,
+          position: userData.position,
+          //fill passwords to same value for validation purposes on edit player form
+          password1: 'qwqwqw',
+          password2: 'qwqwqw',
+          init: { email: userData.email, name: userData.name, city: userData.city }
+        };
+        break;
       }
       default:
         return state;

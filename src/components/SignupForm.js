@@ -95,12 +95,20 @@ class SignupForm extends Component {
   renderLocationItem() {
     if (this.props.location !== null) {
       return (
-        <Input
-          label="Location"
-          placeholder="Toronto"
-          editable={false}
-          value={this.props.city}
-        />
+        <View style={{ flexDirection: 'row', width: '67%' }}>
+          <Input
+            label="Location"
+            placeholder="Toronto"
+            editable={false}
+            value={this.props.city}
+          />
+          <LocationButton
+          onCancelPressed={this.onCancelPressed}
+          onGeoLocationSuccess={this.onGeoLocationSuccess}
+          onLocationSuccess={this.onLocationSuccess}
+          onManuallyEnterLocation={this.onManuallyEnterLocation}
+          />
+        </View>
       );
     }
     return (
@@ -189,6 +197,7 @@ class SignupForm extends Component {
                               value={this.props.password2}
                             />
                         </Item>
+
                         <Item fixedLabel>
                           <Label>Location</Label>
                           {this.renderLocationItem()}
