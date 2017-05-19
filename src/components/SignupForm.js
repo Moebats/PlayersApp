@@ -88,19 +88,27 @@ class SignupForm extends Component {
   }
 
   onSignupPress() {
-    const { name, email, password1, position, location, city } = this.props;
-    this.props.signupUser({ name, email, password: password1, position, location, city });
+    const { name, email, password1, position, location, city, region } = this.props;
+    this.props.signupUser({ name, email, password: password1, position, location, city, region });
   }
 
   renderLocationItem() {
     if (this.props.location !== null) {
       return (
-        <Input
-          label="Location"
-          placeholder="Toronto"
-          editable={false}
-          value={this.props.city}
-        />
+        <View style={{ flexDirection: 'row', width: '67%' }}>
+          <Input
+            label="Location"
+            placeholder="Toronto"
+            editable={false}
+            value={this.props.city}
+          />
+          <LocationButton
+          onCancelPressed={this.onCancelPressed}
+          onGeoLocationSuccess={this.onGeoLocationSuccess}
+          onLocationSuccess={this.onLocationSuccess}
+          onManuallyEnterLocation={this.onManuallyEnterLocation}
+          />
+        </View>
       );
     }
     return (
@@ -189,6 +197,7 @@ class SignupForm extends Component {
                               value={this.props.password2}
                             />
                         </Item>
+
                         <Item fixedLabel>
                           <Label>Location</Label>
                           {this.renderLocationItem()}
@@ -253,9 +262,11 @@ const styles = {
 
 const mapStateToProps = ({ signup }) => {
   const { name, email, password1, password2, position,
-    city, error, loading, showModal, location } = signup;
+    city, error, loading, showModal, location, region } = signup;
 
-  return { name, email, password1, password2, position, city, error, loading, showModal, location };
+  return {
+    name, email, password1, password2, position, city, error, loading, showModal, location, region
+  };
 };
 
 export default connect(mapStateToProps,

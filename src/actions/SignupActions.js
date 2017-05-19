@@ -14,7 +14,8 @@ import {
   SIGNUP_LOCATION_CHANGED,
   SIGNUP_CITY_CHANGED,
   SIGNUP_SHOW_MODAL,
-  PLAYER_FETCH_SUCCESS
+  PLAYER_FETCH_SUCCESS,
+  USER_DATA_FETCH_SUCCESS
 } from './types';
 
 //action generators
@@ -92,7 +93,7 @@ export const signupShowModal = (text) => {
 
 //Add other user sign up feild actions below
 
-export const signupUser = ({ email, name, location, city, password, position }) => {
+export const signupUser = ({ email, name, location, city, password, position, region }) => {
   return (dispatch) => {
     dispatch({ type: SIGNUP_USER });
 
@@ -109,6 +110,7 @@ export const signupUser = ({ email, name, location, city, password, position }) 
              name,
              location,
              city,
+             region,
              position
            });
       })
@@ -123,6 +125,13 @@ export const playerFetch = () => {
       .on('value', snapshot => {
       dispatch({ type: PLAYER_FETCH_SUCCESS, payload: snapshot.val() });
       });
+  };
+};
+
+export const userDataFetchSuccess = (text) => {
+  return {
+    type: USER_DATA_FETCH_SUCCESS,
+    payload: text
   };
 };
 

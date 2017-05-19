@@ -21,3 +21,4 @@ export const SIGNUP_USER_SUCCESS = 'signup_user_success';
 
 //player Actions
 export const PLAYER_FETCH_SUCCESS = 'player_fetch_success';
+export const USER_DATA_FETCH_SUCCESS = 'user_data_fetch_success';

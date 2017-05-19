@@ -82,27 +82,46 @@ export default {
   },
   async getCityFromResponse(response) {
     let city = '';
+    let state = '';
+    let country = '';
+
     try {
-      let found = false;
+      let typeFound = '';
       const components = response.results[0].address_components;
 
       for (let component of components) {
         const { types } = component;
         for (let type of types) {
           if (type === 'locality') {
-            found = true;
+            typeFound = 'locality';
+            break;
+          } else if (type === 'administrative_area_level_1') {
+            typeFound = 'administrative_area_level_1';
+            break;
+          } else if (type === 'country') {
+            typeFound = 'country';
             break;
           }
         }
-        if (found) {
+        if (typeFound === 'locality') {
           city = component.long_name;
-          break;
+          typeFound = '';
+        } else if (typeFound === 'administrative_area_level_1') {
+          state = component.short_name;
+          typeFound = '';
+        } else if (typeFound === 'country') {
+          country = component.short_name;
+          typeFound = '';
         }
       }
     } catch (error) {
       return Promise.reject(new Error('No city found in response.'));
     }
 
-    return city;
+    if (city === '') city = 'undefined';
+    if (state === '') state = 'undefined';
+    if (country === '') country = 'undefined';
+
+    return { city, state, country };
   }
 };
