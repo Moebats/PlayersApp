@@ -97,12 +97,13 @@ const mapStateToProps = state => {
     return { ...val };
   });
 
-let i;
-  for (i = 0; i < users.length; i++){
-    if (users[i].distance === 0) {
-      users.splice(i, 1);
+  console.log(state.geo);
+  let i;
+    for (i = 0; i < users.length; i++){
+      if (users[i].distance === 0) {
+        users.splice(i, 1);
+      }
     }
-  }
   // const users2 = _.map(state.geo, (val) => {
   //   return { ...val };
   // });
