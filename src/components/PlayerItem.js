@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Container, Content, ListItem, Thumbnail, Text, Body, Left, Right, Icon } from 'native-base';
+import { ListItem, Thumbnail, Text, Body, Left, Right, Icon } from 'native-base';
 
 
 class PlayerItem extends Component {
 
   render() {
-    const { name, city, position } = this.props.user;
+    const { name, city, position, distance } = this.props.user;
+    const rounded = distance.toFixed(4)
 
     return (
                 <ListItem avatar>
@@ -16,6 +17,7 @@ class PlayerItem extends Component {
                         <Text>{name}</Text>
                         <Text note>Player type: {position}</Text>
                         <Text note>Location: {city}</Text>
+                        <Text note>Distance from you: {rounded} km</Text>
                     </Body>
                     <Right>
                         <Icon name='chatboxes' style={{ fontSize: 20, color: '#1ec949' }} />
