@@ -5,13 +5,14 @@ import { connect } from 'react-redux';
 import { Text, Icon, Button } from 'native-base';
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
-import { playerFetch } from '../actions/SignupActions';
+import { playerFetch, showGeo } from '../actions/PlayersListActions';
 import PlayerItem from './PlayerItem.js';
 
 
 class PlayerList extends Component {
 
   componentWillMount() {
+    this.props.showGeo();
     this.props.playerFetch();
     this.createDataSource(this.props);
   }
@@ -90,12 +91,29 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-  const users = _.map(state.users, (val, uid) => {
-    return { ...val, uid };
+  // console.log('users below original');
+  // console.log(state.users);
+  const users = _.map(state.geo, (val) => {
+    return { ...val };
   });
-  console.log('users below');
-  console.log(users);
+
+let i;
+  for (i = 0; i < users.length; i++){
+    if (users[i].distance === 0) {
+      users.splice(i, 1);
+    }
+  }
+  // const users2 = _.map(state.geo, (val) => {
+  //   return { ...val };
+  // });
+  // const users = state.geo;
+  console.log(state.geo);
+  console.log(state.users);
+  // console.log('users below coverted');
+  // console.log(users);
+  // console.log(users2);
+
   return { users };
 };
 
-export default connect(mapStateToProps, { playerFetch })(PlayerList);
+export default connect(mapStateToProps, { playerFetch, showGeo })(PlayerList);
