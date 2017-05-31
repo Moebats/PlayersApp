@@ -30,7 +30,7 @@ export const showGeo = () => {
 
       const geoQuery = geoFire.query({
         center: l,
-        radius: 10000 //kilometers
+        radius: 10 //kilometers
       });
 
       geoQuery.on('key_entered', function (key, location, distance) {
