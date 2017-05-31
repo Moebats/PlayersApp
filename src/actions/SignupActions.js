@@ -1,5 +1,6 @@
 import { Actions } from 'react-native-router-flux';
 import firebase from 'firebase';
+import geofire from 'geofire';
 //action types
 import {
   SIGNUP_CLICKED,
@@ -14,7 +15,6 @@ import {
   SIGNUP_LOCATION_CHANGED,
   SIGNUP_CITY_CHANGED,
   SIGNUP_SHOW_MODAL,
-  PLAYER_FETCH_SUCCESS,
   USER_DATA_FETCH_SUCCESS
 } from './types';
 
@@ -113,19 +113,18 @@ export const signupUser = ({ email, name, location, city, password, position, re
              region,
              position
            });
+           //GeoFire call to store new user location into geoFire ref,
+           //Will refactor this into a seperate promise later.
+           const firebaseRef = firebase.database().ref('/geofire');
+           const geoFire = new geofire(firebaseRef);
+           geoFire.set(currentUser.uid, [location.lat, location.lng]).then(function(){
+             console.log('Provided key has been added to GeoFire');
+           }, function(error){
+             console.log('Error: ' + error);
+           });
       })
       .catch((error) => signupFail(dispatch, error));
     };
-};
-
-export const playerFetch = () => {
-  return (dispatch) => {
-    const playerRef = firebase.database().ref('/users');
-    playerRef
-      .on('value', snapshot => {
-      dispatch({ type: PLAYER_FETCH_SUCCESS, payload: snapshot.val() });
-      });
-  };
 };
 
 export const userDataFetchSuccess = (text) => {
