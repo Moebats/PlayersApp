@@ -6,6 +6,7 @@ import ReduxThunk from 'redux-thunk';
 import reducers from './reducers';
 import Router from './Router';
 import Geocoder from './utils/GeocodingUtil';
+import ChatBackend from './ChatBackend';
 
 class App extends Component {
 
@@ -21,6 +22,12 @@ class App extends Component {
       projectId: 'cricket-bc128',
       storageBucket: 'cricket-bc128.appspot.com',
       messagingSenderId: '497007993079'
+    });
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        ChatBackend.setUid(user.uid);
+        ChatBackend.setName(user.name);
+      }
     });
   }
 

@@ -104,7 +104,7 @@ export const signupUser = ({ email, name, location, city, password, position, re
          signupSuccess(dispatch, user);
          const { currentUser } = firebase.auth();
          const usersRef = firebase.database().ref('/users');
-
+         currentUser.updateProfile({ displayName: name });
          usersRef.child(currentUser.uid).set({
              email,
              name,

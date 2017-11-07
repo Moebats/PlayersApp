@@ -98,7 +98,10 @@ class UserEditProfile extends Component {
         region,
         position
       });
-    userSave.updateEmail(email);
+      userSave.updateProfile({
+        displayName: name,
+        email
+      });
   }
 
   onDeletePress() {

@@ -31,7 +31,7 @@ class PlayerList extends Component {
   logout() {
     firebase.auth().signOut()
       .then(() => {
-          Actions.auth();
+          Actions.auth({ reset: true });
         })
       .catch((error) => {
           console.error('Sign Out Error', error);
