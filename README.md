@@ -1,4 +1,4 @@
-### This repo has been imported from my bitbucket account, mostly for code viewing and is not nessesarily up to date.  
+### This repo has been imported from my bitbucket account, mostly for code viewing and is not necessarily up to date.  
 
 1. clone the repo.
 2. under the project root directory, run `npm install`.
