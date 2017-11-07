@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, Image } from 'react-native';
+import { Text, Image } from 'react-native';
 import { connect } from 'react-redux';
+import { Icon, Container, Button, Content, Form, Item, Input, Label } from 'native-base';
 import { emailChanged, passwordChanged, loginUser, signupClicked } from '../actions';
-import { Card, CardSection, Input, Button, Spinner } from './common';
-
-const splash = require('../images/splash.jpg');
+import { Spinner } from './common';
 
 class LoginForm extends Component {
   onEmailChange(text) {
@@ -29,72 +28,86 @@ class LoginForm extends Component {
     if (this.props.loading) {
       return <Spinner size="large" />;
     }
+    const { whiteText, button } = styles;
 
     return (
-      <Button onPress={this.onLoginPress.bind(this)}>
-        Login
-      </Button>
+        <Button
+          block
+          success
+          iconLeft
+          onPress={this.onLoginPress.bind(this)}
+          style={button}
+        >
+          <Icon name='person' />
+          <Text style={whiteText} >Login</Text>
+        </Button>
     );
   }
 
   render() {
-    const { signUpStyle, errorTextStyle, container, image } = styles;
+    const { signUpStyle, errorTextStyle, container, logo } = styles;
 
     return (
-      <Image style={image} source={splash}>
-        <View style={container}>
-          <Card>
-            <CardSection>
-              <Input
-                label="Email"
-                placeholder="email@gmail.com"
-                onChangeText={this.onEmailChange.bind(this)}
-                value={this.props.email}
-              />
-            </CardSection>
-
-            <CardSection>
-              <Input
-                secureTextEntry
-                label="Password"
-                placeholder="password"
-                onChangeText={this.onPasswordChange.bind(this)}
-                value={this.props.password}
-              />
-            </CardSection>
-
-            <Text style={errorTextStyle}>
-              {this.props.error}
-            </Text>
-
-            <CardSection>
-              {this.renderButton()}
-            </CardSection>
-          </Card>
-
-          <TouchableOpacity onPress={this.onSignupPress.bind(this)}>
-            <Text style={signUpStyle}>
-              Sign Up
-            </Text>
-          </TouchableOpacity>
-
-        </View>
-      </Image>
+              <Container style={container}>
+                    <Content>
+                        <Text style={signUpStyle}>
+                          Welcome to Cricket Players App
+                        </Text>
+                        <Image
+                          style={logo}
+                          source={require('../images/batsman.png')}
+                        />
+                        <Form>
+                            <Item fixedLabel>
+                                <Label>Email</Label>
+                                <Input
+                                  label="Email"
+                                  autoFocus
+                                  autoCapitalize='none'
+                                  keyboardType='email-address'
+                                  placeholder="email@gmail.com"
+                                  onChangeText={this.onEmailChange.bind(this)}
+                                  value={this.props.email}
+                                />
+                            </Item>
+                            <Item fixedLabel last>
+                                <Label>Password</Label>
+                                <Input
+                                  secureTextEntry
+                                  label="Password"
+                                  placeholder="password"
+                                  onChangeText={this.onPasswordChange.bind(this)}
+                                  value={this.props.password}
+                                />
+                            </Item>
+                            <Text style={errorTextStyle}>
+                              {this.props.error}
+                            </Text>
+                        </Form>
+                        {this.renderButton()}
+                      <Button transparent block onPress={this.onSignupPress.bind(this)}>
+                        <Text>Do not have an account? Sign Up</Text>
+                      </Button>
+                    </Content>
+                </Container>
     );
   }
 }
 
 const styles = {
-  image: {
-    flex: 1,
-    width: undefined,
-    height: undefined,
-    backgroundColor: 'transparent',
-    resizeMode: 'cover'
+  button: {
+    margin: 10,
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    margin: 25
   },
   container: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   errorTextStyle: {
     fontSize: 20,
@@ -102,10 +115,16 @@ const styles = {
     color: 'red'
   },
   signUpStyle: {
-    color: '#007aff',
-    marginTop: 100,
+    fontSize: 20,
+    textAlign: 'center',
+    color: '#099b3e',
+    marginTop: 50,
+    marginBottom: 30,
     fontWeight: 'bold',
     alignSelf: 'center'
+  },
+  whiteText: {
+    color: 'white'
   }
 };
 
