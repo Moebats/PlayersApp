@@ -3,6 +3,7 @@ import { Button, ListItem, Thumbnail, Text, Body, Left, Right, Icon } from 'nati
 import { Actions } from 'react-native-router-flux';
 
 
+
 class PlayerItem extends Component {
 
   render() {
